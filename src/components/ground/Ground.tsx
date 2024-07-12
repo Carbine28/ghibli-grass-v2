@@ -8,6 +8,7 @@ import { useMemo, useRef } from 'react';
 import { IGrass } from './grass/IGrass';
 import { BGrass } from './grass/BGrass';
 import { Perlin } from '../../utils/Noise/Perlin/static/Perlin';
+import { RigidBody } from '@react-three/rapier';
 
 
 const PERLIN_SCALE = 0.0;
@@ -51,9 +52,11 @@ export function Ground(props: GroundProps) {
   <group {...props} >
     {/* <IGrass/> */}
     <BGrass groundGeoRef={groundGeoRef}/>
-    <mesh geometry={groundGeometry} position={[0,-0.1,0]}>
-      <groundShaderMaterial key={GroundShaderMaterial.key} colorMap={texture} wireframe={isWireframe}/>
-    </mesh>
+    <RigidBody type='fixed' colliders="trimesh">
+      <mesh geometry={groundGeometry}>
+        <groundShaderMaterial key={GroundShaderMaterial.key} colorMap={texture} wireframe={isWireframe}/>
+      </mesh>
+    </RigidBody>
   </group>
   )
 }

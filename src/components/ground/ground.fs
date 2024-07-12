@@ -3,7 +3,8 @@ uniform sampler2D colorMap;
 varying vec2 vuv;
 
 void main() {
-  vec4 color = texture(colorMap, vuv);
+  // vec4 color = texture(colorMap, vuv);
+  vec4 color = vec4(0.4, 0.6, 0.2, 1.0);
 
   // // Apply color based on height map data
   // if (color.r >= 0.8) {
