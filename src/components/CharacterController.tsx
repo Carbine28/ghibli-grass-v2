@@ -99,6 +99,7 @@ export default function CharacterController() {
 
         // vel.x = Math.sin(rotationTarget.current + characterRotationTarget.current) * speed;
         // vel.z = Math.cos(rotationTarget.current + characterRotationTarget.current) * speed;
+        
         vel.x = cameraFowardDirection.x * speed;
         vel.z = cameraFowardDirection.z * speed;
 
