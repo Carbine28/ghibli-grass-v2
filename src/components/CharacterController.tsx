@@ -1,10 +1,10 @@
 import { CapsuleCollider, RapierRigidBody, RigidBody} from "@react-three/rapier";
 import { BigTotoro } from "./totoro/BigTotoro";
-import { MutableRefObject, useRef } from "react";
+import { MutableRefObject, useEffect, useRef } from "react";
 import * as THREE from 'three'
 import { useFrame } from "@react-three/fiber";
 import { useControls } from 'leva';
-import { OrthographicCamera, PerspectiveCamera, useKeyboardControls } from "@react-three/drei";
+import { CameraControls, PerspectiveCamera, useKeyboardControls } from "@react-three/drei";
 import { degToRad } from "three/src/math/MathUtils.js";
 
 
@@ -43,55 +43,69 @@ export default function CharacterController() {
   const rb = useRef<RapierRigidBody>(null!);
   const container = useRef<THREE.Group>(null!);
   const character = useRef<THREE.Group>(null!);
-  const cameraTarget = useRef<THREE.Group>(null!);
-  const cameraPosition = useRef<THREE.Group>(null!);
-
-  const cameraWorldPosition = useRef(new THREE.Vector3());
-  const cameraLookAtWorldPosition = useRef(new THREE.Vector3());
-  const cameraLookAt = useRef(new THREE.Vector3());
 
   const [,get] = useKeyboardControls();
   const characterRotationTarget = useRef(0);
   const rotationTarget = useRef(0);
 
+  const cameraControlsRef = useRef<CameraControls>(null);
+
+  const isCameraPressed = useRef(false);
+
+  useEffect(() => {
+    const handleMouseDown = (e) => {
+      isCameraPressed.current = true;
+    }
+
+    const handleMouseUp= (e) => {
+      isCameraPressed.current = false;
+    }
+
+    window.addEventListener('mousedown', handleMouseDown);
+    window.addEventListener('mouseup', handleMouseUp);
+    return () => {
+      window.removeEventListener('mousedown', handleMouseDown);
+      window.removeEventListener('mouseup', handleMouseUp);
+    }
+  }, [])
+
   useFrame(({camera}) => {
+
     // handleMovement(rb, rotationTarget, characterRotationTarget, get, RUN_SPEED, WALK_SPEED, ROTATION_SPEED)
     if(rb.current){
       const vel = rb.current.linvel();
-  
+      
       const movement = {
         x: 0,
         z: 0
       };
   
-      if(get().forward) {
-        movement.z = 1;
-      } 
-      if(get().backward) {
-        movement.z = -1;
-      }
+      if (get().forward) movement.z = 1;
+      if (get().backward) movement.z = -1;
+      if (get().left) movement.x = -1;
+      if (get().right) movement.x = 1;
       
-  
       const speed = get().run ? RUN_SPEED : WALK_SPEED;
-  
-      if(get().left) {
-        movement.x = 1;
-      }
-      if(get().right) {
-        movement.x = -1;
-      }
-  
-      if(movement.x !== 0) {
-        rotationTarget.current += ROTATION_SPEED * movement.x;
-      }
-  
+      
+      const rbPosition = rb.current.translation()
+
   
       if(movement.x !== 0 || movement.z !== 0) {
-        characterRotationTarget.current = Math.atan2(movement.x, movement.z)
-        vel.x = Math.sin(rotationTarget.current + characterRotationTarget.current) * speed;
-        vel.z = Math.cos(rotationTarget.current + characterRotationTarget.current) * speed;
+        // characterRotationTarget.current = Math.atan2(movement.x, movement.z)
+        // * Calculate the direction the player should move in.
+        const cameraFowardDirection = new THREE.Vector3(rbPosition.x - camera.position.x, rbPosition.y - camera.position.y, rbPosition.z - camera.position.z);
+        cameraFowardDirection.normalize();
+        // characterRotationTarget.current = Math.atan2(moveDirection.x , moveDirection.z);
+
+        // vel.x = Math.sin(rotationTarget.current + characterRotationTarget.current) * speed;
+        // vel.z = Math.cos(rotationTarget.current + characterRotationTarget.current) * speed;
+        vel.x = cameraFowardDirection.x * speed;
+        vel.z = cameraFowardDirection.z * speed;
+
+        characterRotationTarget.current = Math.atan2(cameraFowardDirection.x, cameraFowardDirection.z);
       }
 
+      // Rotates Character model
       character.current.rotation.y = lerpAngle(
         character.current.rotation.y,
         characterRotationTarget.current,
@@ -99,37 +113,37 @@ export default function CharacterController() {
       )
   
       rb.current.setLinvel(vel, true);
-    }
+      cameraControlsRef.current?.setTarget(rbPosition.x, rbPosition.y, rbPosition.z, true);
+    } 
     
 
-    // * CAMERA
-    container.current.rotation.y = THREE.MathUtils.lerp(
-      container.current.rotation.y,
-      rotationTarget.current,
-      0.1
-    )
-    cameraPosition.current.getWorldPosition(cameraWorldPosition.current);
-    camera.position.lerp(cameraWorldPosition.current, 0.1);
+    // // * CAMERA
+    // container.current.rotation.y = lerpAngle(
+    //   container.current.rotation.y,
+    //   rotationTarget.current,
+    //   0.1
+    // )
 
-    if(cameraTarget.current){
-      cameraTarget.current.getWorldPosition(cameraLookAtWorldPosition.current);
-      cameraLookAt.current.lerp(cameraLookAtWorldPosition.current, 0.1);
-      
-      camera.lookAt(cameraLookAt.current);
-    }
+    // // cameraPosition.current.getWorldPosition(cameraWorldPosition.current);
+    // // camera.position.lerp(cameraWorldPosition.current, 0.1);
+
+    // if(cameraTarget.current){
+    //   cameraTarget.current.getWorldPosition(cameraLookAtWorldPosition.current);
+    //   cameraLookAt.current.lerp(cameraLookAtWorldPosition.current, 0.1);
+    // }
   })
 
   return (
   <group position={[0,1,0]}>
+    <CameraControls ref={cameraControlsRef} dollySpeed={0} minZoom={0} maxZoom={0} minDistance={2.5} maxDistance={5} minPolarAngle={1} maxPolarAngle={1.}/>
     <RigidBody lockRotations colliders={false} ref={rb}>
       <group ref={container}>
-        <group ref={cameraTarget} position-z={1}/>
-        <group ref={cameraPosition} position-y={4} position-z={-4}/>
         <group ref={character}>
           <BigTotoro/>  
         </group>
       </group>
-      <CapsuleCollider args={[0.10, 0.4]}/>
+      <PerspectiveCamera makeDefault position={[0,2,-3]} />
+      <CapsuleCollider args={[0.01, 0.25]}/>
     </RigidBody>
   </group>
   )

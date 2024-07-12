@@ -11,7 +11,7 @@ import { Perlin } from '../../utils/Noise/Perlin/static/Perlin';
 import { RigidBody } from '@react-three/rapier';
 
 
-const PERLIN_SCALE = 0.1;
+const PERLIN_SCALE = 0.0;
 
 type GroundProps = {
   widthHeight: number;

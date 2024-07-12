@@ -19,8 +19,7 @@ function App() {
         {/* <Perf/> */}
         {/* <color attach={'background'} args={[0.89,1.00,0.80]}/> */}
         {/* <OrbitControls makeDefault/> */}
-        {/* <CameraControls/> */}
-        <PerspectiveCamera makeDefault/>
+        
         {/* <OrthographicCamera 
           left={-22}
           right={15}
