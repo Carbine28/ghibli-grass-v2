@@ -1,10 +1,15 @@
+import { GroundChunkManager } from "./components/ground/GroundChunkManager";
+import { Lights } from "./components/Lights";
+import Skybox from "./components/sky/Skybox";
+import { BigTotoro } from "./components/totoro/BigTotoro";
+
 export default function Experience() {
 return (
     <>
-      <mesh>
-        <boxGeometry args={[1,1,1]}/> 
-        <meshNormalMaterial/>
-      </mesh>    
+      <Skybox/>
+      <Lights/> 
+      <BigTotoro/>  
+      <GroundChunkManager/>
     </>
   );
 }
