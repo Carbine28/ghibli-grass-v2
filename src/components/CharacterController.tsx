@@ -30,15 +30,9 @@ const lerpAngle = (start: number, end: number, t: number) => {
 };
 
 export default function CharacterController() {
-  const { WALK_SPEED, RUN_SPEED, ROTATION_SPEED } = useControls("Character Controls", {
-    WALK_SPEED: { value: 0.8, min: 0.1, max: 4, step: 0.1},
-    RUN_SPEED: { value: 1.2, min: 0.9, max: 5, step: 0.1},
-    ROTATION_SPEED: {
-      value: degToRad(0.5),
-      min: degToRad(0.1),
-      max: degToRad(5),
-      step: degToRad(0.1),
-    }
+  const { WALK_SPEED, RUN_SPEED } = useControls("Character Controls", {
+    WALK_SPEED: { value: 1.7, min: 0.1, max: 4, step: 0.1},
+    RUN_SPEED: { value: 3.3, min: 0.9, max: 5, step: 0.1}
   })
   const rb = useRef<RapierRigidBody>(null!);
   const container = useRef<THREE.Group>(null!);
@@ -46,11 +40,16 @@ export default function CharacterController() {
 
   const [,get] = useKeyboardControls();
   const characterRotationTarget = useRef(0);
-  const rotationTarget = useRef(0);
 
   const cameraControlsRef = useRef<CameraControls>(null);
 
   const isCameraPressed = useRef(false);
+
+  // useEffect(() => {
+  //   if(cameraControlsRef.current) {
+  //     console.log(cameraControlsRef.current.distance)
+  //   }
+  // }, [cameraControlsRef])
 
   useEffect(() => {
     const handleMouseDown = (e) => {
@@ -70,8 +69,6 @@ export default function CharacterController() {
   }, [])
 
   useFrame(({camera}) => {
-
-    // handleMovement(rb, rotationTarget, characterRotationTarget, get, RUN_SPEED, WALK_SPEED, ROTATION_SPEED)
     if(rb.current){
       const vel = rb.current.linvel();
       
@@ -86,8 +83,6 @@ export default function CharacterController() {
       if (get().right) movement.x = -1;
       
       const speed = get().run ? RUN_SPEED : WALK_SPEED;
-      
-      
   
       if(movement.x !== 0 || movement.z !== 0) {
         // characterRotationTarget.current = Math.atan2(movement.x, movement.z)
@@ -110,12 +105,14 @@ export default function CharacterController() {
 
         vel.x = moveDirection.x * speed;
         vel.z = moveDirection.z * speed;
+
         characterRotationTarget.current = Math.atan2(moveDirection.x , moveDirection.z);
+        
       }
   
       rb.current.setLinvel(vel, true);
       const rbPosition = rb.current.translation()
-      cameraControlsRef.current?.setTarget(rbPosition.x, rbPosition.y, rbPosition.z, true);
+      cameraControlsRef.current?.setTarget(rbPosition.x, rbPosition.y + 0.5, rbPosition.z, true);
     } 
 
     // Rotates Character model
@@ -130,7 +127,14 @@ export default function CharacterController() {
 
   return (
   <group position={[0,1,0]}>
-    <CameraControls ref={cameraControlsRef} dollySpeed={0} minZoom={0} maxZoom={0} minDistance={2.5} maxDistance={5} minPolarAngle={1} maxPolarAngle={1.}/>
+    <CameraControls ref={cameraControlsRef} 
+      dollySpeed={0} 
+      minDistance={2} maxDistance={6} infinityDolly={false}
+      minPolarAngle={40 * THREE.MathUtils.DEG2RAD} maxPolarAngle={80 * THREE.MathUtils.DEG2RAD}
+      polarRotateSpeed={0}
+      azimuthRotateSpeed={0.5}
+      boundaryEnclosesCamera={true}
+    />
     <RigidBody lockRotations colliders={false} ref={rb}>
       <group ref={container}>
         <group ref={character}>
@@ -138,53 +142,8 @@ export default function CharacterController() {
         </group>
       </group>
       <PerspectiveCamera makeDefault position={[0,2,-3]} />
-      <CapsuleCollider args={[0.01, 0.25]}/>
+      <CapsuleCollider args={[0.2, 0.25]}/>
     </RigidBody>
   </group>
   )
-}
-
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function handleMovement(rb: MutableRefObject<RapierRigidBody>, rotationTarget: MutableRefObject<number>, characterRotationTarget: MutableRefObject<number>, get: any,
-  RUN_SPEED: number, WALK_SPEED: number, ROTATION_SPEED: number, 
-) {
-  if(rb.current){
-    const vel = rb.current.linvel();
-
-    const movement = {
-      x: 0,
-      z: 0
-    };
-
-    if(get().forward) {
-      movement.z = 1;
-    } 
-    if(get().backward) {
-      movement.z = -1;
-    }
-    
-
-    const speed = get().run ? RUN_SPEED : WALK_SPEED;
-
-    if(get().left) {
-      movement.x = 1;
-    }
-    if(get().right) {
-      movement.x = -1;
-    }
-
-    if(movement.x !== 0) {
-      rotationTarget.current += ROTATION_SPEED * movement.x;
-    }
-
-
-    if(movement.x !== 0 || movement.z !== 0) {
-      characterRotationTarget.current = Math.atan2(movement.x, movement.z)
-      vel.x = Math.sin(rotationTarget.current) * speed;
-      vel.z = Math.cos(rotationTarget.current) * speed;
-    }
-
-    rb.current.setLinvel(vel, true);
-  }
 }
