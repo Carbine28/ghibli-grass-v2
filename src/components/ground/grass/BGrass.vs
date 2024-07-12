@@ -1,14 +1,15 @@
 varying vec2 vuv;
 varying float frc;
 uniform float uTime;
-attribute vec2 offset;
+attribute vec3 offset;
 
 void main() {
   // vec3 offset = vec3(0., height, 0.);
   // vec4 mvPosition = vec4(position + offset, 1.0);
-  vec4 mvPosition = vec4(position, 1.0);
-  mvPosition.x += offset.x;
-  mvPosition.z += offset.y;
+  vec4 mvPosition = vec4(position + offset, 1.0);
+  // mvPosition.x += offset.x;
+  // mvPosition.z += offset.z;
+
   // mvPosition = instanceMatrix * mvPosition;
 
   // Wind

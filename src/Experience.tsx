@@ -1,3 +1,4 @@
+import { Physics } from "@react-three/rapier";
 import { GroundChunkManager } from "./components/ground/GroundChunkManager";
 import { Lights } from "./components/Lights";
 import Skybox from "./components/sky/Skybox";
@@ -8,8 +9,10 @@ return (
     <>
       <Skybox/>
       <Lights/> 
-      <BigTotoro/>  
-      <GroundChunkManager/>
+      <Physics debug>
+        <BigTotoro/>  
+        <GroundChunkManager/>
+      </Physics>
     </>
   );
 }
