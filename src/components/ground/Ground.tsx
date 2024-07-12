@@ -51,7 +51,7 @@ export function Ground(props: GroundProps) {
   return (
   <group {...props} >
     {/* <IGrass/> */}
-    {/* <BGrass groundGeoRef={groundGeoRef}/> */}
+    <BGrass groundGeoRef={groundGeoRef}/>
     <RigidBody type='fixed' colliders="trimesh">
       <mesh geometry={groundGeometry}>
         <groundShaderMaterial key={GroundShaderMaterial.key} colorMap={texture} wireframe={isWireframe}/>

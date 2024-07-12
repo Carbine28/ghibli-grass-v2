@@ -82,56 +82,50 @@ export default function CharacterController() {
   
       if (get().forward) movement.z = 1;
       if (get().backward) movement.z = -1;
-      if (get().left) movement.x = -1;
-      if (get().right) movement.x = 1;
+      if (get().left) movement.x = 1;
+      if (get().right) movement.x = -1;
       
       const speed = get().run ? RUN_SPEED : WALK_SPEED;
       
-      const rbPosition = rb.current.translation()
-
+      
   
       if(movement.x !== 0 || movement.z !== 0) {
         // characterRotationTarget.current = Math.atan2(movement.x, movement.z)
         // * Calculate the direction the player should move in.
-        const cameraFowardDirection = new THREE.Vector3(rbPosition.x - camera.position.x, rbPosition.y - camera.position.y, rbPosition.z - camera.position.z);
-        cameraFowardDirection.normalize();
-        // characterRotationTarget.current = Math.atan2(moveDirection.x , moveDirection.z);
+        // const cameraFowardDirection = new THREE.Vector3(rbPosition.x - camera.position.x, 0, rbPosition.z - camera.position.z);
+        // cameraFowardDirection.normalize();
+        const cameraForward = new THREE.Vector3();
+        camera.getWorldDirection(cameraForward);
+        cameraForward.y = 0;
+        cameraForward.normalize();
 
-        // vel.x = Math.sin(rotationTarget.current + characterRotationTarget.current) * speed;
-        // vel.z = Math.cos(rotationTarget.current + characterRotationTarget.current) * speed;
-        
-        vel.x = cameraFowardDirection.x * speed;
-        vel.z = cameraFowardDirection.z * speed;
+        const cameraRight = new THREE.Vector3();
+        cameraRight.crossVectors(new THREE.Vector3(0,1,0), cameraForward);
+        cameraRight.normalize();
 
-        characterRotationTarget.current = Math.atan2(cameraFowardDirection.x, cameraFowardDirection.z);
+        const moveDirection = new THREE.Vector3();
+        moveDirection.addScaledVector(cameraForward, movement.z);
+        moveDirection.addScaledVector(cameraRight, movement.x);
+        moveDirection.normalize();
+
+        vel.x = moveDirection.x * speed;
+        vel.z = moveDirection.z * speed;
+        characterRotationTarget.current = Math.atan2(moveDirection.x , moveDirection.z);
       }
+  
+      rb.current.setLinvel(vel, true);
+      const rbPosition = rb.current.translation()
+      cameraControlsRef.current?.setTarget(rbPosition.x, rbPosition.y, rbPosition.z, true);
+    } 
 
-      // Rotates Character model
+    // Rotates Character model
+    if(character.current){
       character.current.rotation.y = lerpAngle(
         character.current.rotation.y,
         characterRotationTarget.current,
         0.1
       )
-  
-      rb.current.setLinvel(vel, true);
-      cameraControlsRef.current?.setTarget(rbPosition.x, rbPosition.y, rbPosition.z, true);
-    } 
-    
-
-    // // * CAMERA
-    // container.current.rotation.y = lerpAngle(
-    //   container.current.rotation.y,
-    //   rotationTarget.current,
-    //   0.1
-    // )
-
-    // // cameraPosition.current.getWorldPosition(cameraWorldPosition.current);
-    // // camera.position.lerp(cameraWorldPosition.current, 0.1);
-
-    // if(cameraTarget.current){
-    //   cameraTarget.current.getWorldPosition(cameraLookAtWorldPosition.current);
-    //   cameraLookAt.current.lerp(cameraLookAtWorldPosition.current, 0.1);
-    // }
+    }
   })
 
   return (

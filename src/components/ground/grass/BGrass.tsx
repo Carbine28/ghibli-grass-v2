@@ -37,7 +37,6 @@ export function BGrass(props: BufferGrassProps) {
     if(materialRef.current) {
       const elapsedTime = state.clock.elapsedTime;
       materialRef.current.uniforms.uTime.value = elapsedTime;
-      // console.log(materialRef.current.uniforms);
     }
   })
 
