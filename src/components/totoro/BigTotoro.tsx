@@ -13,7 +13,7 @@ export function BigTotoro(props: JSX.IntrinsicElements['group']) {
         castShadow
         geometry={nodes.bigTotoro.geometry}
         // material={materials['default.001']}
-        position={[0, 0, 0]}
+        position={[0, -0.5, 0]}
         rotation={[-Math.PI, -Math.PI/2, -Math.PI]}
         scale={0.055}
       >

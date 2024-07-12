@@ -13,10 +13,10 @@ void main() {
   // mvPosition = instanceMatrix * mvPosition;
 
   // Wind
-  // float dispPower = 1.0 - cos( uv.y * 3.1416 / 2.0 );
-  // dispPower *= 0.0;
-  // float displacement = sin( mvPosition.z + uTime * 5.0 ) * ( 0.1 * dispPower );
-  // mvPosition.z += displacement;
+  float dispPower = 1.0 - cos( uv.y * 3.1416 / 2.0 );
+  dispPower *= 0.15;
+  float displacement = sin( mvPosition.z + uTime * 5.0 ) * ( 0.1 * dispPower );
+  mvPosition.z += displacement;
 
   vec4 modelViewPosition = modelMatrix * viewMatrix * mvPosition;
   gl_Position = projectionMatrix * modelViewPosition;

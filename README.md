@@ -1,7 +1,7 @@
 # R3F Ghibli-Inspired 3D scene
 
 ## To-do
-- [ ] Third person character
-- [ ] Physics
+- [x] Third person character
+- [x] Physics
 - [ ] Dynamic LODs
 - [ ] Chunking
