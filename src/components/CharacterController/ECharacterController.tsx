@@ -23,7 +23,6 @@ function ECharacterController(props, ref) {
     <Ecctrl ref={rb}
       camInitDis={-2}
       capsuleHalfHeight={0.2}
-      floatHeight={0}
     >
       <PerspectiveCamera/>
       <BigTotoro/>

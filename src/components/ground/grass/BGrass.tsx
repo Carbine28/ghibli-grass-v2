@@ -1,11 +1,9 @@
 // * Buffer Grass
-import { useGLTF, useTexture} from '@react-three/drei';
-import { MutableRefObject, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { MutableRefObject, useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import "./BGrassMaterial";
 import { BGrassMaterial } from './BGrassMaterial';
-import heightMap from '/assets/grassMap.png';
-import { useFrame, useThree, Vector3 } from '@react-three/fiber';
+import { useFrame, Vector3 } from '@react-three/fiber';
 import { useControls } from 'leva';
 import { useGrassLOD } from './hooks/useGrassLOD';
 
@@ -26,7 +24,6 @@ export function BGrass(props: BufferGrassProps){
   const grassGeometry = useGrassLOD(chunkPos);
   const materialRef = useRef<THREE.ShaderMaterial>(null!);
   const [ attributeData, setAttributeData] = useState<AttributeDataProp>({});
-  const heightTexture = useTexture(heightMap);
   const bGeoRef = useRef<THREE.InstancedBufferGeometry>(null);
   const canRenderRef = useRef(false);
 
@@ -44,11 +41,11 @@ export function BGrass(props: BufferGrassProps){
     }
   })
 
-  useEffect(() => {
-    return () => {
-      bGeoRef.current?.dispose();
-    }
-  }, [])
+  // useEffect(() => {
+  //   return () => {
+  //     bGeoRef.current?.dispose();
+  //   }
+  // }, [])
   
 
   if(!groundGeoRef) return null;
@@ -60,7 +57,7 @@ export function BGrass(props: BufferGrassProps){
       >
         <instancedBufferAttribute attach="attributes-offset" args={[new Float32Array(attributeData.offsets), 3]} />
       </instancedBufferGeometry>
-      <bGrassMaterial ref={materialRef} key={BGrassMaterial.key} heightMap={heightTexture}/>
+      <bGrassMaterial ref={materialRef} key={BGrassMaterial.key}/>
     </mesh> 
   );
 }

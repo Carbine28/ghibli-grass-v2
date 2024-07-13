@@ -48,11 +48,11 @@ export function Ground(props: GroundProps) {
   }, [props.position, widthHeight, widthHeightSegments]);
 
 
-  useEffect(() => {
-    return () => {
-      groundGeometry.dispose();
-    }
-  }, [])
+  // useEffect(() => {
+  //   return () => {
+  //     groundGeometry.dispose();
+  //   }
+  // }, [])
   
   return (
   <group>

@@ -6,7 +6,6 @@ import GrassFrag from './BGrass.fs';
 
 export const BGrassMaterial = shaderMaterial(
   {
-    heightMap: new THREE.Texture(),
     uTime: 0.0,
   },
   GrassVert,

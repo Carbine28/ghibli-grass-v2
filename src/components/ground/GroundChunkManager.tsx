@@ -2,6 +2,7 @@ import { useFrame, useThree } from "@react-three/fiber";
 import { Ground } from "./Ground"
 import * as THREE from 'three';
 import { useEffect, useRef, useState } from "react";
+import { useGlobalStore } from "../../store/GlobalStore";
 
 type ChunkManagerProp = {
   characterPositionRef: any;
@@ -12,8 +13,8 @@ type ChunkIndicesProp = {
   zIndex: number;
 }
 
-const RERENDERRANGE = 10;
-const CULLCHECKINTERVAL = 1000; // Interval to cull in milliseconds
+const RERENDERRANGE = 5;
+const CULLCHECKINTERVAL = 500; // Interval to cull in milliseconds
 
 export function GroundChunkManager(props: ChunkManagerProp) {
   const GRID_SIZE = 5; 
@@ -36,6 +37,7 @@ export function GroundChunkManager(props: ChunkManagerProp) {
     return indices;
   }
   const { camera } = useThree();
+  const { experienceStarted } = useGlobalStore();
 
   const performBoxCullCheck = () => {
     if(!groupCullRefs) return;
@@ -80,13 +82,13 @@ export function GroundChunkManager(props: ChunkManagerProp) {
     }
   })
 
-  return(<group>
+  return(<group visible={experienceStarted}>
     {chunkIndices.map(({ xIndex, zIndex }, i) => (
       <group key={`x${xIndex}-z${zIndex}`} ref={el => groupCullRefs.current[i] = el}>
         <Ground
           chunkPos={{x: xIndex * CHUNK_SIZE, y: 0, z: zIndex * CHUNK_SIZE}}
           widthHeight={CHUNK_SIZE}
-          widthHeightSegments={32}
+          widthHeightSegments={64}
         />
         <mesh name={`boundingBox`} position={[xIndex * CHUNK_SIZE, 0, zIndex * CHUNK_SIZE]} visible={false} >
           <boxGeometry args={[CHUNK_SIZE, CHUNK_SIZE, CHUNK_SIZE]}/>

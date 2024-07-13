@@ -6,7 +6,7 @@ import { Vector3 } from "three";
 const LODDISTANCETHRESHHOLD = 501;
 
 export function useGrassLOD(chunkPos: {x: number, y: number, z: number} ){
-  const grassHIGHLOD = useGLTF('/assets/grass/iGrass.glb');
+  const grassHIGHLOD = useGLTF('/assets/grass/iGrass2.glb');
   const grassGeometry = useRef(grassHIGHLOD.nodes.grass.geometry);
   // const { camera } = useThree();
   // const grassLOWLOD = useGLTF('/assets/grass/grassLowLOD1.glb');
