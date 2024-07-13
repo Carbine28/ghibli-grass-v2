@@ -4,4 +4,4 @@
 - [x] Third person character
 - [x] Physics
 - [ ] Dynamic LODs
-- [ ] Chunking
+- [x] Chunking
