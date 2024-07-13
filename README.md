@@ -3,6 +3,6 @@
 ## To-do
 - [x] Third person character
 - [x] Physics
-- [ ] Dynamic LODs
+- [-] Dynamic LODs (Attempted)
 - [x] Chunking
 - [x] Frustrum Culling :^)

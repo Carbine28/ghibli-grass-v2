@@ -4,14 +4,13 @@ import './grass/IGrassMaterial';
 import { GroundShaderMaterial } from './groundShaderMaterial';
 import { useTexture} from '@react-three/drei';
 import heightMap from '/assets/grassMap.png';
-import { useMemo, useRef } from 'react';
-import { IGrass } from './grass/IGrass';
+import { useEffect, useMemo, useRef } from 'react';
 import { BGrass } from './grass/BGrass';
 import { Perlin } from '../../utils/Noise/Perlin/static/Perlin';
 import { RigidBody } from '@react-three/rapier';
 
 
-const PERLIN_SCALE = 0.0;
+const PERLIN_SCALE = 0.15;
 
 type GroundProps = {
   widthHeight: number;
@@ -47,16 +46,22 @@ export function Ground(props: GroundProps) {
     groundGeoRef.current = planeGeo;
     return planeGeo;
   }, [props.position, widthHeight, widthHeightSegments]);
+
+
+  useEffect(() => {
+    return () => {
+      groundGeometry.dispose();
+    }
+  }, [])
   
   return (
   <group>
-    {/* <IGrass/> */}
     <RigidBody  type='fixed' colliders="trimesh">
       <mesh geometry={groundGeometry}>
         <groundShaderMaterial key={GroundShaderMaterial.key} colorMap={texture} wireframe={isWireframe}/>
       </mesh>
     </RigidBody>
-    <BGrass customPositions={props.position} groundGeoRef={groundGeoRef}/>
+    <BGrass key={`${chunkPos}`} customPositions={props.position} groundGeoRef={groundGeoRef} chunkPos={chunkPos}/>
   </group>
   )
 }

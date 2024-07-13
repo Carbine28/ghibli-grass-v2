@@ -4,6 +4,7 @@ import { useControls } from 'leva';
 import Ecctrl from 'ecctrl';
 import { BigTotoro } from "../totoro/BigTotoro";
 import { RapierRigidBody } from "@react-three/rapier";
+import { PerspectiveCamera } from "@react-three/drei";
 
 function ECharacterController(props, ref) {
   const group = useRef<THREE.Group>(null);
@@ -18,11 +19,13 @@ function ECharacterController(props, ref) {
   
   return (
   <group ref={group} position={[0,0,0]}>
+    {/* <PerspectiveCamera makeDefault/> */}
     <Ecctrl ref={rb}
       camInitDis={-2}
       capsuleHalfHeight={0.2}
       floatHeight={0}
     >
+      <PerspectiveCamera/>
       <BigTotoro/>
     </Ecctrl>
   </group>

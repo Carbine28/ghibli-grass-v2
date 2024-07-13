@@ -1,6 +1,6 @@
 import { Canvas } from "@react-three/fiber"
 import Experience from "./Experience"
-import { CameraControls, KeyboardControls, Loader, OrbitControls, OrthographicCamera, PerspectiveCamera } from "@react-three/drei"
+import { KeyboardControls, Loader } from "@react-three/drei"
 import { Perf } from 'r3f-perf';
 
 
