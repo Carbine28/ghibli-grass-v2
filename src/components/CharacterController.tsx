@@ -1,6 +1,6 @@
 import { CapsuleCollider, RapierRigidBody, RigidBody} from "@react-three/rapier";
 import { BigTotoro } from "./totoro/BigTotoro";
-import { MutableRefObject, useEffect, useRef } from "react";
+import { forwardRef, MutableRefObject, useEffect, useImperativeHandle, useRef } from "react";
 import * as THREE from 'three'
 import { useFrame } from "@react-three/fiber";
 import { useControls } from 'leva';
@@ -29,7 +29,10 @@ const lerpAngle = (start: number, end: number, t: number) => {
   return normalizeAngle(start + (end - start) * t);
 };
 
-export default function CharacterController() {
+function CharacterController(props, ref) {
+  useImperativeHandle(ref, () => (
+    ref = rb
+  ))
   const { WALK_SPEED, RUN_SPEED } = useControls("Character Controls", {
     WALK_SPEED: { value: 1.7, min: 0.1, max: 4, step: 0.1},
     RUN_SPEED: { value: 3.3, min: 0.9, max: 5, step: 0.1}
@@ -47,7 +50,7 @@ export default function CharacterController() {
 
   // useEffect(() => {
   //   if(cameraControlsRef.current) {
-  //     console.log(cameraControlsRef.current.distance)
+      
   //   }
   // }, [cameraControlsRef])
 
@@ -68,6 +71,7 @@ export default function CharacterController() {
     }
   }, [])
 
+
   useFrame(({camera}) => {
     if(rb.current){
       const vel = rb.current.linvel();
@@ -83,7 +87,6 @@ export default function CharacterController() {
       if (get().right) movement.x = -1;
       
       const speed = get().run ? RUN_SPEED : WALK_SPEED;
-  
       if(movement.x !== 0 || movement.z !== 0) {
         // characterRotationTarget.current = Math.atan2(movement.x, movement.z)
         // * Calculate the direction the player should move in.
@@ -129,11 +132,13 @@ export default function CharacterController() {
   <group position={[0,1,0]}>
     <CameraControls ref={cameraControlsRef} 
       dollySpeed={0} 
-      minDistance={2} maxDistance={6} infinityDolly={false}
-      minPolarAngle={40 * THREE.MathUtils.DEG2RAD} maxPolarAngle={80 * THREE.MathUtils.DEG2RAD}
-      polarRotateSpeed={0}
+      minZoom={1} maxZoom={1.1} 
+      minDistance={2} maxDistance={2} infinityDolly={false}
+      minPolarAngle={60 * THREE.MathUtils.DEG2RAD} maxPolarAngle={90 * THREE.MathUtils.DEG2RAD}
+      polarRotateSpeed={0.01}
       azimuthRotateSpeed={0.5}
       boundaryEnclosesCamera={true}
+      smoothTime={0.1}
     />
     <RigidBody lockRotations colliders={false} ref={rb}>
       <group ref={container}>
@@ -147,3 +152,8 @@ export default function CharacterController() {
   </group>
   )
 }
+
+
+const ForwardedCharacterController = forwardRef(CharacterController);
+
+export default ForwardedCharacterController;

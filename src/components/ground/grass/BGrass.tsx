@@ -5,10 +5,11 @@ import * as THREE from 'three';
 import "./BGrassMaterial";
 import { BGrassMaterial } from './BGrassMaterial';
 import heightMap from '/assets/grassMap.png';
-import { useFrame } from '@react-three/fiber';
+import { useFrame, Vector3 } from '@react-three/fiber';
 
 type BufferProps = {
   groundGeoRef: MutableRefObject<THREE.PlaneGeometry>
+  customPositions: Vector3 | undefined
 }
 
 type BufferGrassProps = BufferProps & JSX.IntrinsicElements['group'];
@@ -18,7 +19,7 @@ type AttributeDataProp = {
 }
 
 export function BGrass(props: BufferGrassProps) {
-  const { groundGeoRef } = props;
+  const { groundGeoRef, customPositions } = props;
   const materialRef = useRef<THREE.ShaderMaterial>(null!);
   const [ attributeData, setAttributeData] = useState<AttributeDataProp>({});
   const { nodes } = useGLTF('/assets/grass/iGrass.glb');
@@ -40,7 +41,7 @@ export function BGrass(props: BufferGrassProps) {
     }
   })
 
-  return(canRender ? <mesh>
+  return(canRender ? <mesh position={customPositions}>
     <instancedBufferGeometry index={nodes.grass.geometry.index} 
       attributes-position={nodes.grass.geometry.attributes.position}
       attributes-uv={nodes.grass.geometry.attributes.uv}

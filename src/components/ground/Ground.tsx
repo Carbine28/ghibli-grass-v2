@@ -16,13 +16,14 @@ const PERLIN_SCALE = 0.0;
 type GroundProps = {
   widthHeight: number;
   widthHeightSegments: number;
+  chunkPos: {x: number, y: number, z: number};
   isWireframe?: boolean;
 } & JSX.IntrinsicElements['group']
 
 export function Ground(props: GroundProps) {
   const texture = useTexture(heightMap);
   const groundGeoRef = useRef<THREE.PlaneGeometry>(null!);
-  const {widthHeight, widthHeightSegments, isWireframe } = props;
+  const {widthHeight, widthHeightSegments, isWireframe, chunkPos } = props;
   const groundGeometry = useMemo(() => {
     const planeGeo = new THREE.PlaneGeometry(widthHeight, widthHeight, widthHeightSegments, widthHeightSegments);
     planeGeo.lookAt(new THREE.Vector3(0,1,0));
@@ -32,8 +33,8 @@ export function Ground(props: GroundProps) {
       const iX = i;
       const iZ = i + 1;
       const iY = i + 2;
-      newPositions[iX] += (props.position ? props.position.x : 0);
-      newPositions[iY] += (props.position ? props.position.z : 0);
+      newPositions[iX] += chunkPos.x;
+      newPositions[iY] += chunkPos.z;
       newPositions[iZ] += Perlin.noise(newPositions[iX] * PERLIN_SCALE, newPositions[iY] * PERLIN_SCALE);
       // newPositions[iY] += 0;
     }
@@ -49,14 +50,14 @@ export function Ground(props: GroundProps) {
 
   
   return (
-  <group {...props} >
+  <group>
     {/* <IGrass/> */}
-    <BGrass groundGeoRef={groundGeoRef}/>
     <RigidBody type='fixed' colliders="trimesh">
       <mesh geometry={groundGeometry}>
         <groundShaderMaterial key={GroundShaderMaterial.key} colorMap={texture} wireframe={isWireframe}/>
       </mesh>
     </RigidBody>
+    <BGrass customPositions={props.position} groundGeoRef={groundGeoRef}/>
   </group>
   )
 }

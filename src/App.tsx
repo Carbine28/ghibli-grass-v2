@@ -1,6 +1,6 @@
 import { Canvas } from "@react-three/fiber"
 import Experience from "./Experience"
-import { CameraControls, KeyboardControls, OrbitControls, OrthographicCamera, PerspectiveCamera } from "@react-three/drei"
+import { CameraControls, KeyboardControls, Loader, OrbitControls, OrthographicCamera, PerspectiveCamera } from "@react-three/drei"
 import { Perf } from 'r3f-perf';
 
 
@@ -16,7 +16,7 @@ function App() {
   return (
     <KeyboardControls map={keyboardMap}>
       <Canvas>
-        {/* <Perf/> */}
+        <Perf position='top-left'/>
         {/* <color attach={'background'} args={[0.89,1.00,0.80]}/> */}
         {/* <OrbitControls makeDefault/> */}
         
@@ -28,6 +28,7 @@ function App() {
         /> */}
         <Experience/>
       </Canvas>
+      <Loader/>
     </KeyboardControls>
   )
 }
