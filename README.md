@@ -5,3 +5,4 @@
 - [x] Physics
 - [ ] Dynamic LODs
 - [x] Chunking
+- [x] Frustrum Culling :^)

@@ -1,5 +1,5 @@
 // * Buffer Grass
-import { FaceLandmarkerDefaults, useGLTF, useTexture} from '@react-three/drei';
+import { useGLTF, useTexture} from '@react-three/drei';
 import { MutableRefObject, useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import "./BGrassMaterial";
@@ -26,7 +26,6 @@ export function BGrass(props: BufferGrassProps){
   const { nodes } = useGLTF('/assets/grass/iGrass.glb');
   const heightTexture = useTexture(heightMap);
   const [ canRender, setCanRender ] = useState(false);
-  const toggleRef = useRef(FaceLandmarkerDefaults) 
   const bGeoRef = useRef<THREE.InstancedBufferGeometry>(null);
 
   useEffect(() => {
@@ -41,12 +40,11 @@ export function BGrass(props: BufferGrassProps){
 
   useFrame((state) => {
     if(materialRef.current) {
-      const elapsedTime = state.clock.elapsedTime;
-      materialRef.current.uniforms.uTime.value = elapsedTime;
+      materialRef.current.uniforms.uTime.value = state.clock.elapsedTime;
     }
   })
 
-  return(canRender ? <mesh position={customPositions} visible={toggleRef.current} >
+  return(canRender ? <mesh position={customPositions} frustumCulled={false}>
       <instancedBufferGeometry ref={bGeoRef} index={nodes.grass.geometry.index} 
         attributes-position={nodes.grass.geometry.attributes.position}
         attributes-uv={nodes.grass.geometry.attributes.uv}
