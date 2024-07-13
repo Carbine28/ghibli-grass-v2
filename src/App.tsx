@@ -17,7 +17,7 @@ function App() {
   return (
     <KeyboardControls map={keyboardMap}>
       <Canvas>
-        <Perf position='top-left'/>
+        {/* <Perf position='top-left'/> */}
         {/* <color attach={'background'} args={[0.89,1.00,0.80]}/> */}
         <Intro/>
         <Experience/>

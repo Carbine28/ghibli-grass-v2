@@ -2,10 +2,11 @@ import { CapsuleCollider, RapierRigidBody, RigidBody} from "@react-three/rapier"
 import { BigTotoro } from "./totoro/BigTotoro";
 import { forwardRef, MutableRefObject, useEffect, useImperativeHandle, useRef } from "react";
 import * as THREE from 'three'
-import { useFrame } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
 import { useControls } from 'leva';
 import { CameraControls, OrbitControls, PerspectiveCamera, useKeyboardControls } from "@react-three/drei";
 import { degToRad } from "three/src/math/MathUtils.js";
+import { useGlobalStore } from "../store/GlobalStore";
 
 
 const normalizeAngle = (angle: number) => {
@@ -46,11 +47,19 @@ function CharacterController(props, ref) {
 
   const cameraTargetRef = useRef<THREE.Group>(null);
   const cameraTargetGroup = useRef<THREE.Group>(null);
-  const cameraTargetRotation = useRef(0);
   const lastMouseMove = useRef({x: 0, y: 0});
   const theta = useRef(0); // Azimuthal angle
   const phi = useRef(Math.PI / 4); // Polar angle
   const radius = 5;
+
+  // const { set } = useThree(({ get, set }) => ({ get, set }));
+  // const { experienceStarted} = useGlobalStore();
+
+  // useEffect(() => {
+  //   if(experienceStarted) {
+  //     set({camera: })
+  //   }
+  // }, [experienceStarted])
 
   const isCameraPressed = useRef(false);
   useEffect(() => {
