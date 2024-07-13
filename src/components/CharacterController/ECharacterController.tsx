@@ -1,0 +1,34 @@
+import { forwardRef,useImperativeHandle, useRef } from "react";
+import * as THREE from 'three'
+import { useControls } from 'leva';
+import Ecctrl from 'ecctrl';
+import { BigTotoro } from "../totoro/BigTotoro";
+import { RapierRigidBody } from "@react-three/rapier";
+
+function ECharacterController(props, ref) {
+  const group = useRef<THREE.Group>(null);
+  useImperativeHandle(ref, () => (
+    ref = rb
+  ))
+  const rb = useRef<RapierRigidBody>(null);
+  // const { WALK_SPEED, RUN_SPEED } = useControls("Character Controls", {
+  //   WALK_SPEED: { value: 1.7, min: 0.1, max: 4, step: 0.1},
+  //   RUN_SPEED: { value: 3.3, min: 0.9, max: 5, step: 0.1}
+  // })
+  
+  return (
+  <group ref={group} position={[0,0,0]}>
+    <Ecctrl ref={rb}
+      camInitDis={-2}
+      capsuleHalfHeight={0.2}
+      floatHeight={0}
+    >
+      <BigTotoro/>
+    </Ecctrl>
+  </group>
+  )
+}
+
+const ForwardedECharacterController = forwardRef(ECharacterController);
+
+export default ForwardedECharacterController;

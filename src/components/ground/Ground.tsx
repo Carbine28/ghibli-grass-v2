@@ -18,12 +18,14 @@ type GroundProps = {
   widthHeightSegments: number;
   chunkPos: {x: number, y: number, z: number};
   isWireframe?: boolean;
+  isVisible?: boolean;
+  
 } & JSX.IntrinsicElements['group']
 
 export function Ground(props: GroundProps) {
   const texture = useTexture(heightMap);
   const groundGeoRef = useRef<THREE.PlaneGeometry>(null!);
-  const {widthHeight, widthHeightSegments, isWireframe, chunkPos } = props;
+  const {widthHeight, widthHeightSegments, isWireframe, chunkPos, isVisible } = props;
   const groundGeometry = useMemo(() => {
     const planeGeo = new THREE.PlaneGeometry(widthHeight, widthHeight, widthHeightSegments, widthHeightSegments);
     planeGeo.lookAt(new THREE.Vector3(0,1,0));
@@ -50,9 +52,9 @@ export function Ground(props: GroundProps) {
 
   
   return (
-  <group>
+  <group visible={isVisible}>
     {/* <IGrass/> */}
-    <RigidBody type='fixed' colliders="trimesh">
+    <RigidBody  type='fixed' colliders="trimesh">
       <mesh geometry={groundGeometry}>
         <groundShaderMaterial key={GroundShaderMaterial.key} colorMap={texture} wireframe={isWireframe}/>
       </mesh>

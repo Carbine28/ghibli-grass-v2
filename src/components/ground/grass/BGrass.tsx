@@ -1,11 +1,12 @@
 // * Buffer Grass
-import { useGLTF, useTexture} from '@react-three/drei';
+import { FaceLandmarkerDefaults, useGLTF, useTexture} from '@react-three/drei';
 import { MutableRefObject, useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import "./BGrassMaterial";
 import { BGrassMaterial } from './BGrassMaterial';
 import heightMap from '/assets/grassMap.png';
 import { useFrame, Vector3 } from '@react-three/fiber';
+import { useControls } from 'leva';
 
 type BufferProps = {
   groundGeoRef: MutableRefObject<THREE.PlaneGeometry>
@@ -18,18 +19,22 @@ type AttributeDataProp = {
   offsets: number[]
 }
 
-export function BGrass(props: BufferGrassProps) {
+export function BGrass(props: BufferGrassProps){
   const { groundGeoRef, customPositions } = props;
   const materialRef = useRef<THREE.ShaderMaterial>(null!);
   const [ attributeData, setAttributeData] = useState<AttributeDataProp>({});
   const { nodes } = useGLTF('/assets/grass/iGrass.glb');
   const heightTexture = useTexture(heightMap);
   const [ canRender, setCanRender ] = useState(false);
+  const toggleRef = useRef(FaceLandmarkerDefaults) 
+  const bGeoRef = useRef<THREE.InstancedBufferGeometry>(null);
 
   useEffect(() => {
     if(groundGeoRef.current) {
       const data = getAttributeData(groundGeoRef);
       setAttributeData(data);
+      bGeoRef.current?.computeBoundingBox();
+      bGeoRef.current?.computeBoundingSphere();
       setCanRender(true);
     }
   }, [groundGeoRef])
@@ -41,17 +46,17 @@ export function BGrass(props: BufferGrassProps) {
     }
   })
 
-  return(canRender ? <mesh position={customPositions}>
-    <instancedBufferGeometry index={nodes.grass.geometry.index} 
-      attributes-position={nodes.grass.geometry.attributes.position}
-      attributes-uv={nodes.grass.geometry.attributes.uv}
-    >
-      <instancedBufferAttribute attach="attributes-offset" args={[new Float32Array(attributeData.offsets), 3]} />
-    </instancedBufferGeometry>
-    <bGrassMaterial ref={materialRef} key={BGrassMaterial.key} heightMap={heightTexture}/>
-  </mesh> : null);
+  return(canRender ? <mesh position={customPositions} visible={toggleRef.current} >
+      <instancedBufferGeometry ref={bGeoRef} index={nodes.grass.geometry.index} 
+        attributes-position={nodes.grass.geometry.attributes.position}
+        attributes-uv={nodes.grass.geometry.attributes.uv}
+      >
+        <instancedBufferAttribute attach="attributes-offset" args={[new Float32Array(attributeData.offsets), 3]} />
+      </instancedBufferGeometry>
+      <bGrassMaterial ref={materialRef} key={BGrassMaterial.key} heightMap={heightTexture}/>
+    </mesh> : null
+  );
 }
-
 
 function getAttributeData(groundGeoRef: MutableRefObject<THREE.PlaneGeometry>) {
   const offsets = [];

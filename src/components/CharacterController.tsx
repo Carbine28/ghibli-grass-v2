@@ -4,7 +4,7 @@ import { forwardRef, MutableRefObject, useEffect, useImperativeHandle, useRef } 
 import * as THREE from 'three'
 import { useFrame } from "@react-three/fiber";
 import { useControls } from 'leva';
-import { CameraControls, PerspectiveCamera, useKeyboardControls } from "@react-three/drei";
+import { CameraControls, OrbitControls, PerspectiveCamera, useKeyboardControls } from "@react-three/drei";
 import { degToRad } from "three/src/math/MathUtils.js";
 
 
@@ -44,30 +44,51 @@ function CharacterController(props, ref) {
   const [,get] = useKeyboardControls();
   const characterRotationTarget = useRef(0);
 
-  const cameraControlsRef = useRef<CameraControls>(null);
+  const cameraTargetRef = useRef<THREE.Group>(null);
+  const cameraTargetGroup = useRef<THREE.Group>(null);
+  const cameraTargetRotation = useRef(0);
+  const lastMouseMove = useRef({x: 0, y: 0});
+  const theta = useRef(0); // Azimuthal angle
+  const phi = useRef(Math.PI / 4); // Polar angle
+  const radius = 5;
 
   const isCameraPressed = useRef(false);
-
-  // useEffect(() => {
-  //   if(cameraControlsRef.current) {
-      
-  //   }
-  // }, [cameraControlsRef])
-
   useEffect(() => {
     const handleMouseDown = (e) => {
       isCameraPressed.current = true;
+      lastMouseMove.current = {x: e.clientX, y: e.clientY}
     }
 
     const handleMouseUp= (e) => {
       isCameraPressed.current = false;
     }
 
+    const handleMouseMove = (e) => {
+      if(isCameraPressed.current && cameraTargetGroup && cameraTargetGroup.current){
+        const deltaX = e.clientX - lastMouseMove.current.x;
+        const deltaY = e.clientY - lastMouseMove.current.y;
+        lastMouseMove.current = {x: e.clientX, y: e.clientY}
+         // Update spherical coordinates based on delta
+         theta.current -= deltaX * 0.002; // Yaw (horizontal rotation)
+         phi.current -= deltaY * 0.002; // Pitch (vertical rotation)
+ 
+         // Clamp phi to avoid flipping
+         phi.current = Math.max(0.1, Math.min(Math.PI - 0.1, phi.current));
+
+        // cameraTargetGroup.current.rotation.y -= deltaX * 0.002;
+        // cameraTargetGroup.current.rotation.x -= deltaY * 0.002;
+        // cameraTargetGroup.current.rotation.x = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, cameraTargetGroup.current.rotation.x)); // Limit vertical rotation)
+        // cameraTargetGroup.current.rotation.z = 0; // ! Lock the roll axis or face the consequences
+      }
+    }
+
     window.addEventListener('mousedown', handleMouseDown);
     window.addEventListener('mouseup', handleMouseUp);
+    window.addEventListener('mousemove', handleMouseMove);
     return () => {
       window.removeEventListener('mousedown', handleMouseDown);
       window.removeEventListener('mouseup', handleMouseUp);
+      window.removeEventListener('mousemove', handleMouseMove);
     }
   }, [])
 
@@ -76,11 +97,7 @@ function CharacterController(props, ref) {
     if(rb.current){
       const vel = rb.current.linvel();
       
-      const movement = {
-        x: 0,
-        z: 0
-      };
-  
+      const movement = { x: 0, z: 0};
       if (get().forward) movement.z = 1;
       if (get().backward) movement.z = -1;
       if (get().left) movement.x = 1;
@@ -88,10 +105,7 @@ function CharacterController(props, ref) {
       
       const speed = get().run ? RUN_SPEED : WALK_SPEED;
       if(movement.x !== 0 || movement.z !== 0) {
-        // characterRotationTarget.current = Math.atan2(movement.x, movement.z)
         // * Calculate the direction the player should move in.
-        // const cameraFowardDirection = new THREE.Vector3(rbPosition.x - camera.position.x, 0, rbPosition.z - camera.position.z);
-        // cameraFowardDirection.normalize();
         const cameraForward = new THREE.Vector3();
         camera.getWorldDirection(cameraForward);
         cameraForward.y = 0;
@@ -106,18 +120,32 @@ function CharacterController(props, ref) {
         moveDirection.addScaledVector(cameraRight, movement.x);
         moveDirection.normalize();
 
+        if (moveDirection.length() > 0) {
+          moveDirection.normalize();
+        }
         vel.x = moveDirection.x * speed;
         vel.z = moveDirection.z * speed;
 
         characterRotationTarget.current = Math.atan2(moveDirection.x , moveDirection.z);
-        
+      } else {
+        vel.x = 0;
+        vel.z = 0;
       }
   
       rb.current.setLinvel(vel, true);
-      const rbPosition = rb.current.translation()
-      cameraControlsRef.current?.setTarget(rbPosition.x, rbPosition.y + 0.5, rbPosition.z, true);
-    } 
-
+      const rbPosition = rb.current.translation();
+     // Calculate the new camera position
+      const x = rbPosition.x + radius * Math.sin(phi.current) * Math.sin(theta.current);
+      const y = rbPosition.y + radius * Math.cos(phi.current);
+      const z = rbPosition.z + radius * Math.sin(phi.current) * Math.cos(theta.current);
+      camera.position.set(x,y,z);
+      camera.lookAt(rbPosition.x, rbPosition.y, rbPosition.z)
+      camera.updateProjectionMatrix();
+      // const rbPosition = rb.current.translation()
+      // // const tRB = new THREE.Vector3(rbPosition.x, rbPosition.y, rbPosition.z);
+      // // console.log(camera.);
+    }
+    
     // Rotates Character model
     if(character.current){
       character.current.rotation.y = lerpAngle(
@@ -129,30 +157,25 @@ function CharacterController(props, ref) {
   })
 
   return (
-  <group position={[0,1,0]}>
-    <CameraControls ref={cameraControlsRef} 
-      dollySpeed={0} 
-      minZoom={1} maxZoom={1.1} 
-      minDistance={2} maxDistance={2} infinityDolly={false}
-      minPolarAngle={60 * THREE.MathUtils.DEG2RAD} maxPolarAngle={90 * THREE.MathUtils.DEG2RAD}
-      polarRotateSpeed={0.01}
-      azimuthRotateSpeed={0.5}
-      boundaryEnclosesCamera={true}
-      smoothTime={0.1}
-    />
-    <RigidBody lockRotations colliders={false} ref={rb}>
+  <group position={[0,2,0]}>
+    <OrbitControls/>
+    <PerspectiveCamera makeDefault position={[0,0.68,4]} />
+    <RigidBody restitution={0} linearDamping={0} angularDamping={0} lockRotations colliders={false} ref={rb}>
       <group ref={container}>
+        <group ref={cameraTargetRef}>
+          <group ref={cameraTargetGroup}>
+          </group>
+        </group>
         <group ref={character}>
           <BigTotoro/>  
         </group>
       </group>
-      <PerspectiveCamera makeDefault position={[0,2,-3]} />
+      
       <CapsuleCollider args={[0.2, 0.25]}/>
     </RigidBody>
   </group>
   )
 }
-
 
 const ForwardedCharacterController = forwardRef(CharacterController);
 
