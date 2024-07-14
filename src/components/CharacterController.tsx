@@ -109,8 +109,8 @@ function CharacterController(props, ref) {
       const movement = { x: 0, z: 0};
       if (get().forward) movement.z = 1;
       if (get().backward) movement.z = -1;
-      if (get().left) movement.x = 1;
-      if (get().right) movement.x = -1;
+      if (get().leftward) movement.x = 1;
+      if (get().rightward) movement.x = -1;
       
       const speed = get().run ? RUN_SPEED : WALK_SPEED;
       if(movement.x !== 0 || movement.z !== 0) {

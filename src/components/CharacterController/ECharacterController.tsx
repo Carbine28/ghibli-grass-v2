@@ -4,9 +4,13 @@ import { useControls } from 'leva';
 import Ecctrl from 'ecctrl';
 import { BigTotoro } from "../totoro/BigTotoro";
 import { RapierRigidBody } from "@react-three/rapier";
-import { KeyboardControls, PerspectiveCamera } from "@react-three/drei";
-import { useThree } from "@react-three/fiber";
+import { KeyboardControls, PerspectiveCamera, PositionalAudio, useKeyboardControls } from "@react-three/drei";
+import { useFrame, useThree } from "@react-three/fiber";
 import { useGlobalStore } from "../../store/GlobalStore";
+import grassRunSfx from '/assets/audio/runGrassSfx.mp3';
+import CharacterAudioController from "./CharacterAudioController";
+
+console.log(grassRunSfx);
 
 const keyboardMap = [
   { name: "forward", keys: ["ArrowUp", "KeyW"] },
@@ -27,16 +31,17 @@ function ECharacterController(props, ref) {
   // const { WALK_SPEED, RUN_SPEED } = useControls("Character Controls", {
   //   WALK_SPEED: { value: 1.7, min: 0.1, max: 4, step: 0.1},
   //   RUN_SPEED: { value: 3.3, min: 0.9, max: 5, step: 0.1}
-  // })
+
+
+
+  const posAudioRef = useRef<THREE.PositionalAudio>(null!);
 
   const { set } = useThree(({ get, set }) => ({ get, set }));
   const { experienceStarted} = useGlobalStore();
 
   // useEffect(() => {
   //   if(experienceStarted) {
-  //     window.setTimeout(() => {
-  //       set({camera: per.current })
-  //     }, 2000)
+  //     posAudioRef.current.play();
   //   }
   // }, [experienceStarted])
 
@@ -50,8 +55,11 @@ function ECharacterController(props, ref) {
         capsuleHalfHeight={0.2}
         camCollision={false}
         autoBalance={false}
+        
       >
         {/* <PerspectiveCamera ref={per} fov={75} near={0.1} far={1000} /> */}
+        <PositionalAudio ref={posAudioRef} url={grassRunSfx}/>
+        <CharacterAudioController positionalAudioRef={posAudioRef}/>
         <BigTotoro/>
       </Ecctrl>
     </KeyboardControls>
