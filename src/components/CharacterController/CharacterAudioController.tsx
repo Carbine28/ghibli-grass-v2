@@ -29,7 +29,7 @@ export default function CharacterAudioController(props: AudioControllerProps) {
     if (get().leftward) movement.x = 1;
     if (get().rightward) movement.x = -1;
     if(movement.x !== 0 || movement.z !== 0 || joystickDis) {
-      if(positionalAudioRef){
+      if(positionalAudioRef && !positionalAudioRef.current.isPlaying){
         positionalAudioRef.current.play();
         positionalAudioRef.current.setLoop(true);
       }

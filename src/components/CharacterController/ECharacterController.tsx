@@ -10,8 +10,6 @@ import { useGlobalStore } from "../../store/GlobalStore";
 import grassRunSfx from '/assets/audio/runGrassSfx.mp3';
 import CharacterAudioController from "./CharacterAudioController";
 
-console.log(grassRunSfx);
-
 const keyboardMap = [
   { name: "forward", keys: ["ArrowUp", "KeyW"] },
   { name: "backward", keys: ["ArrowDown", "KeyS"] },

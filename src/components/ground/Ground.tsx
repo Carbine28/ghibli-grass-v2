@@ -8,6 +8,7 @@ import { useEffect, useMemo, useRef } from 'react';
 import { BGrass } from './grass/BGrass';
 import { Perlin } from '../../utils/Noise/Perlin/static/Perlin';
 import { RigidBody } from '@react-three/rapier';
+import MiscGenerator from './misc/MiscGenerator';
 
 
 const PERLIN_SCALE = 0.15;
@@ -48,11 +49,11 @@ export function Ground(props: GroundProps) {
   }, [props.position, widthHeight, widthHeightSegments]);
 
 
-  // useEffect(() => {
-  //   return () => {
-  //     groundGeometry.dispose();
-  //   }
-  // }, [])
+  useEffect(() => {
+    return () => {
+      groundGeometry.dispose();
+    }
+  }, [])
   
   return (
   <group>
@@ -62,6 +63,7 @@ export function Ground(props: GroundProps) {
       </mesh>
     </RigidBody>
     <BGrass key={`${chunkPos}`} customPositions={props.position} groundGeoRef={groundGeoRef} chunkPos={chunkPos}/>
+    {/* <MiscGenerator groundGeoRef={groundGeoRef}/> */}
   </group>
   )
 }
