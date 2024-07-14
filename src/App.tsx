@@ -3,6 +3,7 @@ import Experience from "./Experience"
 import { KeyboardControls, Loader } from "@react-three/drei"
 import { Perf } from 'r3f-perf';
 import Intro from "./components/Intro/Intro";
+import IntroControls from "./components/Intro/IntroControls";
 
 const keyboardMap = [
   { name: "forward", keys: ["ArrowUp", "KeyW"] },
@@ -16,6 +17,9 @@ const keyboardMap = [
 function App() {
   return (
     <KeyboardControls map={keyboardMap}>
+      <div style={{zIndex: '999999'}}>
+        <IntroControls/>
+      </div>
       <Canvas>
         {/* <Perf position='top-left'/> */}
         <color attach={'background'} args={[0.89,1.00,0.80]}/>
