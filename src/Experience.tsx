@@ -7,7 +7,7 @@ import { useGlobalStore } from "./store/GlobalStore";
 
 export default function Experience() {
   const { experienceStarted } = useGlobalStore();
-return (
+  return (
     <>
       <Skybox/>
       <Lights/> 

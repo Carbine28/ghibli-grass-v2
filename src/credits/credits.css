@@ -1,0 +1,19 @@
+.creditsContainer{
+  z-index: inherit ;
+  position: absolute;
+  top: 2%;
+  left: 2%;
+  display: flex;
+}
+
+.github {
+  background-color: white;
+}
+
+.iconImg {
+  width: 72;
+  height: 72px;
+}
+
+.iconContainer{
+}

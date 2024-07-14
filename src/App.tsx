@@ -1,9 +1,10 @@
 import { Canvas } from "@react-three/fiber"
 import Experience from "./Experience"
-import { KeyboardControls, Loader } from "@react-three/drei"
+import { KeyboardControls} from "@react-three/drei"
 import { Perf } from 'r3f-perf';
 import Intro from "./components/Intro/Intro";
 import IntroControls from "./components/Intro/IntroControls";
+import Credits from "./credits/Credits";
 
 const keyboardMap = [
   { name: "forward", keys: ["ArrowUp", "KeyW"] },
@@ -18,6 +19,7 @@ function App() {
   return (
     <KeyboardControls map={keyboardMap}>
       <div style={{zIndex: '999999'}}>
+        <Credits/>
         <IntroControls/>
       </div>
       <Canvas>

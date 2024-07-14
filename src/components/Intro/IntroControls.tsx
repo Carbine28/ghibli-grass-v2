@@ -1,7 +1,8 @@
+import { useState, useEffect } from 'react';
 import { useGlobalStore } from '../../store/GlobalStore';
 import cursorImg from '/assets/totoro/cursorImg.png';
 import cursor2Img from '/assets/totoro/dustBunny.png';
-import { useState, useEffect } from 'react';
+import './IntroControls.css'
 
 export default function IntroControls() {
   const [ cursorPosition, setCursorPosition ] = useState({x: (window.innerWidth/ 2), y: (window.innerHeight/2)})
@@ -9,7 +10,7 @@ export default function IntroControls() {
   const { toggleExperienceStarted } = useGlobalStore();
 
   useEffect(() => {
-    const handleMouseMove = (e) => {
+    const handleMouseMove = (e: { clientX: number; clientY: number; }) => {
       if(transitioned) return;
       setCursorPosition({x:e.clientX, y:e.clientY});
     }
