@@ -8,7 +8,7 @@ import fs from './Intro.fs';
 export const IntroShaderMaterial = shaderMaterial(
   {
     mask: new THREE.Texture(),
-    scale: 0.0,
+    scale: 1.0,
   },
   vs,
   fs
