@@ -11,7 +11,7 @@ export function SoundManager(){
   const { experienceStarted } = useGlobalStore();
   const { camera } = useThree();
   const { contextSafe } = useGSAP();
-  const windVolume = useRef(0.1);
+  const windVolume = useRef(0.3);
   useEffect(() => {
     if(experienceStarted) {
       // create an AudioListener and add it to the camera
@@ -22,13 +22,13 @@ export function SoundManager(){
       const fadeInSound = contextSafe(() => {
         sound.setVolume(0.0);
         gsap.to(windVolume, {
-          current: 0.2,
-          duration: 30,
+          current: 0.6,
+          duration: 15,
           onUpdate: () => {
             sound.setVolume(windVolume.current)
           },
           onComplete: () => {
-            sound.setVolume(0.2);
+            sound.setVolume(0.6);
           },
           ease: 'power1.in'
         })

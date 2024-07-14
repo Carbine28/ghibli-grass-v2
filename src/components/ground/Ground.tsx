@@ -2,14 +2,11 @@ import * as THREE from 'three';
 import './groundShaderMaterial';
 import './grass/IGrassMaterial';
 import { GroundShaderMaterial } from './groundShaderMaterial';
-import { useTexture} from '@react-three/drei';
-import heightMap from '/assets/grassMap.png';
 import { useEffect, useMemo, useRef } from 'react';
 import { BGrass } from './grass/BGrass';
 import { Perlin } from '../../utils/Noise/Perlin/static/Perlin';
 import { RigidBody } from '@react-three/rapier';
 import MiscGenerator from './misc/MiscGenerator';
-
 
 const PERLIN_SCALE = 0.15;
 
@@ -21,7 +18,6 @@ type GroundProps = {
 } & JSX.IntrinsicElements['group']
 
 export function Ground(props: GroundProps) {
-  const texture = useTexture(heightMap);
   const groundGeoRef = useRef<THREE.PlaneGeometry>(null!);
   const {widthHeight, widthHeightSegments, isWireframe, chunkPos } = props;
   const groundGeometry = useMemo(() => {

@@ -1,4 +1,4 @@
-import { TransformControls, useTexture } from '@react-three/drei';
+import { useTexture } from '@react-three/drei';
 import './PerlinCloudsShaderMaterial';
 import { PerlinCloudsShaderMaterial } from './PerlinCloudsShaderMaterial';
 import noiseMap from '/assets/clouds/cloudPerlinNoise.jpg';

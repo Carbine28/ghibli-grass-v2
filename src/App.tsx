@@ -1,6 +1,6 @@
 import { Canvas } from "@react-three/fiber"
 import Experience from "./Experience"
-import { KeyboardControls, Loader} from "@react-three/drei"
+import {Loader} from "@react-three/drei"
 import { Perf } from 'r3f-perf';
 import Intro from "./components/Intro/Intro";
 import IntroControls from "./components/Intro/IntroControls";
@@ -9,7 +9,6 @@ import { FrameLimiter } from "./FrameRateLimiter";
 import { Suspense, useEffect, useState } from "react";
 import * as THREE from 'three';
 import { EcctrlJoystick } from "ecctrl";
-import { GroundShaderMaterial } from "./components/ground/groundShaderMaterial";
 import joystickVs from './components/joystick/Joystick.vs'
 import joystickFs from './components/joystick/Joystick.fs'
 import joystickTopVs from './components/joystick/JoystickTop.vs'
@@ -62,7 +61,7 @@ function App() {
          ({ gl, scene, camera, invalidate }) => setContext({ gl, scene, camera, invalidate })
         }
       >
-        <Perf position='top-left'/>
+        {/* <Perf position='top-left'/> */}
         <color attach={'background'} args={[0.89,1.00,0.80]}/>
         <Intro/>
         <Experience/>

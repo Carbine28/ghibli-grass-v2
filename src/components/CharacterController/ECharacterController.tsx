@@ -5,7 +5,7 @@ import Ecctrl from 'ecctrl';
 import { BigTotoro } from "../totoro/BigTotoro";
 import { RapierRigidBody } from "@react-three/rapier";
 import { KeyboardControls, PerspectiveCamera, PositionalAudio, useKeyboardControls } from "@react-three/drei";
-import { useFrame, useThree } from "@react-three/fiber";
+import { useThree } from "@react-three/fiber";
 import { useGlobalStore } from "../../store/GlobalStore";
 import grassRunSfx from '/assets/audio/runGrassSfx.mp3';
 import CharacterAudioController from "./CharacterAudioController";

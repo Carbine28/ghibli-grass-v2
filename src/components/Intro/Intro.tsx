@@ -9,13 +9,15 @@ import mask from '/assets/totoro/introMask2.png';
 import { gsap } from 'gsap/gsap-core';
 import { useGSAP } from '@gsap/react';
 import { useGlobalStore } from '../../store/GlobalStore';
-
+import { LinearFilter } from 'three';
 export default function Intro() {
   const orthoCameraRef = useRef<OrthoThreeType | null>(null);
   const planeRef = useRef<Mesh>(null);
   const { size, scene } = useThree();
   const aspect = useRef(size.width / size.height);
   const maskTexture = useTexture(mask);
+  maskTexture.minFilter = LinearFilter;
+  maskTexture.magFilter = LinearFilter;
   const { contextSafe } = useGSAP();
   const shaderRef = useRef<ShaderMaterial>(null!);
   const { experienceStarted } = useGlobalStore();
