@@ -27,7 +27,7 @@ const EcctrlJoystickControls = () => {
   }, [])
   return (
     <>
-      {isTouchScreen && <EcctrlJoystick buttonNumber={0} 
+      {isTouchScreen && <EcctrlJoystick buttonNumber={1} 
       joystickBaseProps={{
         material: new THREE.ShaderMaterial({vertexShader: joystickVs, fragmentShader: joystickFs})
       }} 
