@@ -21,7 +21,7 @@ export default defineConfig(({ command }) => {
     return {
       // build specific config
       plugins: [react(), glsl()],
-      base: '/ghibli-grass-v2/'
+      base: '/ghibli-grass-v2/dist/'
     }
   }
 })

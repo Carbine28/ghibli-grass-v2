@@ -1,10 +1,11 @@
 import { useGLTF, useTexture } from '@react-three/drei'
 import './TotoroShaderMaterial';
 import { TotoroShaderMaterial } from './TotoroShaderMaterial';
+import totoro from '/assets/totoro/bigTotoro.glb?url';
 import baseTexture from '/assets/totoro/totoroBase.png';
 
 export function BigTotoro(props: JSX.IntrinsicElements['group']) {
-  const { nodes } = useGLTF('/assets/totoro/bigTotoro.glb')
+  const { nodes } = useGLTF(totoro)
   const baseTex = useTexture(baseTexture);
   baseTex.flipY = false; // * Don't forget to flip textures
   return (

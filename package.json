@@ -3,11 +3,14 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "homepage": "https://carbine28.github.io/ghibli-grass-v2/",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "predeploy" : "pnpm run build",
+    "deploy" : "gh-pages -d dist"
   },
   "dependencies": {
     "@gsap/react": "^2.1.1",
@@ -32,6 +35,7 @@
     "eslint": "^8.56.0",
     "eslint-plugin-react-hooks": "^4.6.2",
     "eslint-plugin-react-refresh": "^0.4.8",
+    "gh-pages": "^6.1.1",
     "r3f-perf": "^7.2.1",
     "typescript": "^5.5.3",
     "vite": "^5.3.3",
