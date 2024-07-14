@@ -7,4 +7,5 @@ export default defineConfig({
   root: './',
   publicDir: './public',
   plugins: [react(), glsl()],
+   base: '/ghibli-grass-v2/'
 })
