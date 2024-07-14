@@ -16,7 +16,7 @@ export default function CharacterAudioController(props: AudioControllerProps) {
   useEffect(() => {
     if(positionalAudioRef) {
       // console.log(positionalAudioRef.current.getVolume())
-      positionalAudioRef.current.setVolume(1.2)
+      positionalAudioRef.current.setVolume(0.4)
     }
   }, [positionalAudioRef])
 

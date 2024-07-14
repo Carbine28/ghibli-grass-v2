@@ -6,7 +6,7 @@ import Intro from "./components/Intro/Intro";
 import IntroControls from "./components/Intro/IntroControls";
 import Credits from "./credits/Credits";
 import { FrameLimiter } from "./FrameRateLimiter";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import * as THREE from 'three';
 import { EcctrlJoystick } from "ecctrl";
 import { GroundShaderMaterial } from "./components/ground/groundShaderMaterial";
@@ -50,11 +50,13 @@ function App() {
 
   return (<>
       <EcctrlJoystickControls/>
-      <div style={{zIndex: '999999'}}>
-        <Credits/>
-        <IntroControls/>
-      </div>
-      
+      <Loader/>
+      <Suspense fallback={null}>
+        <div style={{zIndex: '999999'}}>
+          <Credits/>
+          <IntroControls/>
+        </div>
+      </Suspense>
       <Canvas 
         onCreated={
          ({ gl, scene, camera, invalidate }) => setContext({ gl, scene, camera, invalidate })
@@ -74,7 +76,7 @@ function App() {
           invalidate={context.invalidate}
         />
       )}
-      {/* <Loader/> */}
+      
   </>
   )
 }

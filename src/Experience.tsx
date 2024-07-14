@@ -4,12 +4,14 @@ import Skybox from "./components/sky/Skybox";
 import PhysicsWorldManager from "./components/PhysicsWorldManager";
 import { SoundManager } from "./components/SoundManager";
 import { useGlobalStore } from "./store/GlobalStore";
+import PerlinClouds from "./components/PerlinClouds/PerlinClouds";
 
 export default function Experience() {
   const { experienceStarted } = useGlobalStore();
   return (
     <>
       <Skybox/>
+      <PerlinClouds/>
       <Lights/> 
       <SoundManager/>
       <Physics paused={!experienceStarted}>
