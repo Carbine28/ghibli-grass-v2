@@ -7,7 +7,6 @@ import groundFragmentShader from './ground.fs';
 
 export const GroundShaderMaterial = shaderMaterial(
   {
-    colorMap: new THREE.Texture(),
   },
   groundVertexShader,
   groundFragmentShader

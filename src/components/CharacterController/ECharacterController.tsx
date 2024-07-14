@@ -4,9 +4,18 @@ import { useControls } from 'leva';
 import Ecctrl from 'ecctrl';
 import { BigTotoro } from "../totoro/BigTotoro";
 import { RapierRigidBody } from "@react-three/rapier";
-import { PerspectiveCamera } from "@react-three/drei";
+import { KeyboardControls, PerspectiveCamera } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
 import { useGlobalStore } from "../../store/GlobalStore";
+
+const keyboardMap = [
+  { name: "forward", keys: ["ArrowUp", "KeyW"] },
+  { name: "backward", keys: ["ArrowDown", "KeyS"] },
+  { name: "leftward", keys: ["ArrowLeft", "KeyA"] },
+  { name: "rightward", keys: ["ArrowRight", "KeyD"] },
+  // { name: "jump", keys: ["Space"] },
+  { name: "run", keys: ['Shift']},
+]
 
 function ECharacterController(props, ref) {
   const group = useRef<THREE.Group>(null);
@@ -25,7 +34,9 @@ function ECharacterController(props, ref) {
 
   // useEffect(() => {
   //   if(experienceStarted) {
-  //     set({camera: per.current })
+  //     window.setTimeout(() => {
+  //       set({camera: per.current })
+  //     }, 2000)
   //   }
   // }, [experienceStarted])
 
@@ -33,13 +44,17 @@ function ECharacterController(props, ref) {
   return (
   <group ref={group} position={[0,0,0]}>
     {/* <PerspectiveCamera makeDefault/> */}
-    <Ecctrl ref={rb}
-      camInitDis={-2}
-      capsuleHalfHeight={0.2}
-    >
-      {/* <PerspectiveCamera ref={per}/> */}
-      <BigTotoro/>
-    </Ecctrl>
+    <KeyboardControls map={keyboardMap}>
+      <Ecctrl ref={rb}
+        camInitDis={-2.5}
+        capsuleHalfHeight={0.2}
+        camCollision={false}
+        autoBalance={false}
+      >
+        {/* <PerspectiveCamera ref={per} fov={75} near={0.1} far={1000} /> */}
+        <BigTotoro/>
+      </Ecctrl>
+    </KeyboardControls>
   </group>
   )
 }

@@ -11,9 +11,9 @@ import { useGSAP } from '@gsap/react';
 import { useGlobalStore } from '../../store/GlobalStore';
 
 export default function Intro() {
-  const orthoCameraRef = useRef<OrthoThreeType>(null);
+  const orthoCameraRef = useRef<OrthoThreeType | null>(null);
   const planeRef = useRef<Mesh>(null);
-  const { size } = useThree();
+  const { size, scene } = useThree();
   const aspect = useRef(size.width / size.height);
   const maskTexture = useTexture(mask);
   const { contextSafe } = useGSAP();
@@ -51,7 +51,16 @@ export default function Intro() {
   }, [experienceStarted])
 
 
-  if(unmount) return null;
+
+  if(unmount){
+    if(orthoCameraRef) {
+      if(orthoCameraRef.current){
+        scene.remove(orthoCameraRef.current);
+        orthoCameraRef.current = null;
+      }
+    }
+    return null;
+  }
 
   return (
     <OrthographicCamera

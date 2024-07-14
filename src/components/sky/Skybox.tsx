@@ -3,6 +3,12 @@ import { useGlobalStore } from '../../store/GlobalStore'
 import { useThree } from '@react-three/fiber';
 import { useEffect } from 'react';
 import * as THREE from 'three';
+import px from '/assets/cubeMap/px.png?url';
+import nx from '/assets/cubeMap/nx.png?url';
+import py from '/assets/cubeMap/py.png?url';
+import ny from '/assets/cubeMap/ny.png?url';
+import pz from '/assets/cubeMap/pz.png?url';
+import nz from '/assets/cubeMap/nz.png?url';
 
 export default function Skybox() {
   const { experienceStarted } = useGlobalStore();
@@ -10,12 +16,12 @@ export default function Skybox() {
 
   const cubeTexture = useEnvironment({
     files: [
-      '/assets/cubeMap/px.png',
-      '/assets/cubeMap/nx.png',
-      '/assets/cubeMap/py.png',
-      '/assets/cubeMap/ny.png',
-      '/assets/cubeMap/pz.png',
-      '/assets/cubeMap/nz.png',
+      px,
+      nx,
+      py,
+      ny,
+      pz,
+      nz
     ]
   });
   

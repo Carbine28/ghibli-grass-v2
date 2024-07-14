@@ -26,4 +26,4 @@ export function BigTotoro(props: JSX.IntrinsicElements['group']) {
   )
 }
 
-useGLTF.preload('/bigTotoro.glb')
+useGLTF.preload(totoro);
