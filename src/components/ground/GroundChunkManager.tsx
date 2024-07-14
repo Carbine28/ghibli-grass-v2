@@ -14,7 +14,7 @@ type ChunkIndicesProp = {
 }
 
 const RERENDERRANGE = 5;
-const CULLCHECKINTERVAL = 500; // Interval to cull in milliseconds
+const CULLCHECKINTERVAL = 400; // Interval to cull in milliseconds
 
 export function GroundChunkManager(props: ChunkManagerProp) {
   const GRID_SIZE = 5; 

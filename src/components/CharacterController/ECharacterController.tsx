@@ -23,11 +23,11 @@ function ECharacterController(props, ref) {
   const { set } = useThree(({ get, set }) => ({ get, set }));
   const { experienceStarted} = useGlobalStore();
 
-  useEffect(() => {
-    if(experienceStarted) {
-      set({camera: per.current })
-    }
-  }, [experienceStarted])
+  // useEffect(() => {
+  //   if(experienceStarted) {
+  //     set({camera: per.current })
+  //   }
+  // }, [experienceStarted])
 
   
   return (
@@ -37,7 +37,7 @@ function ECharacterController(props, ref) {
       camInitDis={-2}
       capsuleHalfHeight={0.2}
     >
-      <PerspectiveCamera ref={per}/>
+      {/* <PerspectiveCamera ref={per}/> */}
       <BigTotoro/>
     </Ecctrl>
   </group>
