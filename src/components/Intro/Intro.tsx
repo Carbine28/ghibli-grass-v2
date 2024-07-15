@@ -14,10 +14,22 @@ export default function Intro() {
   const orthoCameraRef = useRef<OrthoThreeType | null>(null);
   const planeRef = useRef<Mesh>(null);
   const { size, scene } = useThree();
-  const aspect = useRef(size.width / size.height);
+  const canvasAspect = useRef(size.width / size.height);
   const maskTexture = useTexture(mask);
+  
+  // ? Fixed image squish?
+  const imageAspect = maskTexture.image ? maskTexture.image.width / maskTexture.image.height : 1.0;
+  const aspect = imageAspect / canvasAspect.current;
+
+  maskTexture.offset.x = aspect > 1 ? (1 - 1 / aspect) / 2 : 0;
+  maskTexture.repeat.x = aspect > 1 ? 1 / aspect : 1;
+ 
+  maskTexture.offset.y = aspect > 1 ? 0 : (1 - aspect) / 2;
+  maskTexture.repeat.y = aspect > 1 ? 1 : aspect;
+
   maskTexture.minFilter = LinearFilter;
   maskTexture.magFilter = LinearFilter;
+
   const { contextSafe } = useGSAP();
   const shaderRef = useRef<ShaderMaterial>(null!);
   const { experienceStarted } = useGlobalStore();
@@ -25,16 +37,16 @@ export default function Intro() {
 
   // * Resizing , affects orthographics camera
   useEffect(() => {
-    aspect.current = size.width / size.height;
+    canvasAspect.current = size.width / size.height;
     if(orthoCameraRef.current) {
-      orthoCameraRef.current.left = aspect.current / - 1;
-      orthoCameraRef.current.right = aspect.current / 1;
-      orthoCameraRef.current.top = aspect.current / 1;
-      orthoCameraRef.current.bottom = aspect.current / -1;
+      orthoCameraRef.current.left = canvasAspect.current / - 1;
+      orthoCameraRef.current.right = canvasAspect.current / 1;
+      orthoCameraRef.current.top = canvasAspect.current / 1;
+      orthoCameraRef.current.bottom = canvasAspect.current / -1;
       orthoCameraRef.current.updateProjectionMatrix();
     }
     if(planeRef.current) {
-      planeRef.current.scale.set(aspect.current, aspect.current, 1);
+      planeRef.current.scale.set(canvasAspect.current, canvasAspect.current, 1);
     }
   }, [size]);
 
@@ -67,13 +79,13 @@ export default function Intro() {
   return (
     <OrthographicCamera
       ref={orthoCameraRef}
-      left={ aspect.current / -1} right={ aspect.current / 1}
-      top={aspect.current /  1} bottom={ aspect.current / -1}
+      left={ canvasAspect.current / -1} right={ canvasAspect.current / 1}
+      top={canvasAspect.current /  1} bottom={ canvasAspect.current / -1}
       near={0}
       far={1}
       makeDefault
     >
-    <mesh ref={planeRef} scale={[aspect.current, aspect.current , 1]}>
+    <mesh ref={planeRef} scale={[canvasAspect.current, canvasAspect.current , 1]}>
       <planeGeometry args={[2, 2]}/>
       <introShaderMaterial ref={shaderRef} key={IntroShaderMaterial.key} mask={maskTexture} transparent />
     </mesh>

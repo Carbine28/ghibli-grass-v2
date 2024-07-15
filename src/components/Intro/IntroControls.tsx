@@ -32,7 +32,7 @@ export default function IntroControls() {
     setTimeout(() => {
       toggleExperienceStarted();
       setTransitioned(true);
-    }, 500)
+    }, 1000)
   }
 
   if(transitioned) return null;

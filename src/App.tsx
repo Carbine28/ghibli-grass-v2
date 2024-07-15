@@ -69,9 +69,12 @@ function App() {
         onCreated={
          ({ gl, scene, camera, invalidate }) => setContext({ gl, scene, camera, invalidate })
         }
+        camera={{
+          far:2000 // ! Must be greater than the radius of the skybox (1000), otherwise white fragments due to frustrum cull / depth buffer fail(?)
+        }}
       >
         {/* <Perf position='top-left'/> */}
-        <color attach={'background'} args={[0.89,1.00,0.80]}/>
+        <color attach={'background'} args={[0.23,0.7,0.95]}/>
         <Intro/>
         <Experience/>
       </Canvas>
