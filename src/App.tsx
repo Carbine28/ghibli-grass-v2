@@ -34,6 +34,15 @@ const EcctrlJoystickControls = () => {
       joystickHandleProps={{
         material: new THREE.ShaderMaterial({vertexShader: joystickTopVs, fragmentShader: joystickTopFs})
       }}
+      buttonSmallBaseProps={{
+        material: new THREE.ShaderMaterial({vertexShader: joystickTopVs, fragmentShader: joystickTopFs})
+      }}
+       buttonLargeBaseProps={{
+        material: new THREE.ShaderMaterial({vertexShader: joystickVs, fragmentShader: joystickFs})
+      }}
+      buttonTop1Props={{
+        material: new THREE.ShaderMaterial({vertexShader: joystickTopVs, fragmentShader: joystickTopFs})
+      }}
     />}
     </>
   )
