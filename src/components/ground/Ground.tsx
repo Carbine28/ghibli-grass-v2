@@ -55,7 +55,8 @@ export function Ground(props: GroundProps) {
   <group>
     <RigidBody  type='fixed' colliders="trimesh">
       <mesh geometry={groundGeometry}>
-        <groundShaderMaterial key={GroundShaderMaterial.key} wireframe={isWireframe}/>
+        {/* <groundShaderMaterial key={GroundShaderMaterial.key} wireframe={isWireframe}/> */}
+        <meshStandardMaterial color={'#669933'}/>
       </mesh>
     </RigidBody>
     <BGrass key={`${chunkPos}`} customPositions={props.position} groundGeoRef={groundGeoRef} chunkPos={chunkPos}/>
