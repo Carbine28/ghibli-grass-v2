@@ -10,14 +10,11 @@ interface AudioCache {
 type GlobalState = {
   experienceStarted: boolean;
   toggleExperienceStarted: () => void;
-  playerMeshRef: MutableRefObject<Group>;
+  playerMeshRef: MutableRefObject<Group> | null;
   setPlayerMeshRef: (ref: MutableRefObject<Group>) => void;
 }
 
 export const useGlobalStore = create<GlobalState>()((set) => {
-
-
-
   const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
   const audioCache: AudioCache = {};
   return {

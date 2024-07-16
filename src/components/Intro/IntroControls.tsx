@@ -3,6 +3,7 @@ import { useGlobalStore } from '../../store/GlobalStore';
 import cursorImg from '/assets/totoro/cursorImg.png';
 import cursor2Img from '/assets/totoro/dustBunny.png';
 import './IntroControls.css'
+import { EVENTS } from '../../data/EVENTS';
 
 export default function IntroControls() {
   const [ cursorPosition, setCursorPosition ] = useState({x: (window.innerWidth/ 2), y: (window.innerHeight/2)})
@@ -29,10 +30,18 @@ export default function IntroControls() {
         pointerElement.style.visibility = 'hidden';
       }, 1000)
     }
+    
+    setTimeout(() => {
+      const transitionOut = new Event(EVENTS.outlineTransitionOut);
+      window.dispatchEvent(transitionOut);
+    }, 300)
+
     setTimeout(() => {
       toggleExperienceStarted();
       setTransitioned(true);
-    }, 1000)
+      const toPerspective = new Event(EVENTS.perspective);
+      window.dispatchEvent(toPerspective);
+    }, 1300)
   }
 
   if(transitioned) return null;
