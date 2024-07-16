@@ -19,6 +19,11 @@ export function GroundChunkManager() {
   const [ chunkIndices, setChunkIndices ] = useState<ChunkIndicesProp[]>([]);
   const groupCullRefs = useRef<THREE.Group[] | null[]>([]);
   const intervalRef = useRef(0);
+  // const { camera } = useThree();
+  const get = useThree((state) => state.get);
+  const { experienceStarted, playerMeshRef } = useGlobalStore();
+  const targetPos = useRef(new THREE.Vector3());
+
   const calculateChunkIndices = (x:number, z: number) => {
     const indices = [];
     for (let xOffset = -Math.floor(GRID_SIZE / 2); xOffset <= Math.floor(GRID_SIZE / 2); xOffset++) {
@@ -31,14 +36,14 @@ export function GroundChunkManager() {
     }
     return indices;
   }
-  const { camera } = useThree();
-  const { experienceStarted, playerMeshRef } = useGlobalStore();
-  const targetPos = useRef(new THREE.Vector3());
+  
+
 
   const performBoxCullCheck = () => {
-    if(!groupCullRefs) return;
+    if(!groupCullRefs.current) return;
     const frustrum = new THREE.Frustum();
     const cameraViewProjectionMatrix = new THREE.Matrix4()
+    const camera = get().camera;
     cameraViewProjectionMatrix.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse)
     frustrum.setFromProjectionMatrix(cameraViewProjectionMatrix)
     groupCullRefs.current.forEach(group => {
@@ -54,14 +59,14 @@ export function GroundChunkManager() {
   useEffect(() => {
     if(playerMeshRef){
       const {x, z} = playerMeshRef.current.getWorldPosition(targetPos.current);
-      const clampedPos = {x: Math.floor(x), z: Math.floor(z)}
+      const clampedPos = {x: Math.ceil(x), z: Math.ceil(z)}
       setChunkIndices(calculateChunkIndices(clampedPos.x, clampedPos.z));
       prevPosition.current = clampedPos;
 
       // set an Interval to cull here
       intervalRef.current = window.setInterval(performBoxCullCheck, CULLCHECKINTERVAL)
       return () => {
-        if(intervalRef)
+        if(intervalRef.current)
           window.clearInterval(intervalRef.current)
       }
     }
@@ -80,7 +85,7 @@ export function GroundChunkManager() {
     }
   })
 
-  return(<group visible={experienceStarted}>
+  return(<group visible={experienceStarted} >
     {chunkIndices.map(({ xIndex, zIndex }, i) => (
       <group key={`x${xIndex}-z${zIndex}`} ref={el => groupCullRefs.current[i] = el}>
         <Ground 

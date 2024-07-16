@@ -9,7 +9,6 @@ import { EVENTS } from '../../data/EVENTS';
 export default function Camera() {
   const perspectiveCam = useRef<THREE.PerspectiveCamera>(null!);
   const orthoCam = useRef<THREE.OrthographicCamera>(null!);
-
   const { get, set } = useThree(({ get, set }) => ({ get, set }));
 
   useEffect(() => {
@@ -49,7 +48,7 @@ export default function Camera() {
       position={[0,0,0]}
     />
     <group name='screenTransitions'>
-      <OutlineTransition position={[0,0, 0]}/>
+      <OutlineTransition position={[0,0,0]}/>
     </group>
   </>
   )
