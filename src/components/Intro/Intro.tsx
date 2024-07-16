@@ -65,12 +65,12 @@ export default function Intro() {
   }, [experienceStarted])
 
 
-
   if(unmount){
     if(orthoCameraRef) {
       if(orthoCameraRef.current){
-        scene.remove(orthoCameraRef.current);
-        orthoCameraRef.current = null;
+        // scene.remove(orthoCameraRef.current);
+        // orthoCameraRef.current = null;
+        
       }
     }
     return null;

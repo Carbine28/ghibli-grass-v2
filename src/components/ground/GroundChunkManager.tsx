@@ -4,10 +4,6 @@ import * as THREE from 'three';
 import { useEffect, useRef, useState } from "react";
 import { useGlobalStore } from "../../store/GlobalStore";
 
-type ChunkManagerProp = {
-  characterPositionRef: any;
-} & JSX.IntrinsicElements['group']
-
 type ChunkIndicesProp = {
   xIndex: number;
   zIndex: number;
@@ -16,10 +12,9 @@ type ChunkIndicesProp = {
 const RERENDERRANGE = 5;
 const CULLCHECKINTERVAL = 400; // Interval to cull in milliseconds
 
-export function GroundChunkManager(props: ChunkManagerProp) {
+export function GroundChunkManager() {
   const GRID_SIZE = 5; 
   const CHUNK_SIZE = 10; // Width and height of each chunk
-  const { characterPositionRef } = props;
   const prevPosition = useRef({x: 0, z: 0})
   const [ chunkIndices, setChunkIndices ] = useState<ChunkIndicesProp[]>([]);
   const groupCullRefs = useRef<THREE.Group[] | null[]>([]);
@@ -37,7 +32,8 @@ export function GroundChunkManager(props: ChunkManagerProp) {
     return indices;
   }
   const { camera } = useThree();
-  const { experienceStarted } = useGlobalStore();
+  const { experienceStarted, playerMeshRef } = useGlobalStore();
+  const targetPos = useRef(new THREE.Vector3());
 
   const performBoxCullCheck = () => {
     if(!groupCullRefs) return;
@@ -56,23 +52,25 @@ export function GroundChunkManager(props: ChunkManagerProp) {
   }
 
   useEffect(() => {
-    const { x, z } = characterPositionRef.current.current.translation()
-    const clampedPos = {x: Math.floor(x), z: Math.floor(z)}
-    setChunkIndices(calculateChunkIndices(clampedPos.x, clampedPos.z));
-    prevPosition.current = clampedPos;
+    if(playerMeshRef){
+      const {x, z} = playerMeshRef.current.getWorldPosition(targetPos.current);
+      const clampedPos = {x: Math.floor(x), z: Math.floor(z)}
+      setChunkIndices(calculateChunkIndices(clampedPos.x, clampedPos.z));
+      prevPosition.current = clampedPos;
 
-    // set an Interval to cull here
-    intervalRef.current = window.setInterval(performBoxCullCheck, CULLCHECKINTERVAL)
-    return () => {
-      if(intervalRef)
-        window.clearInterval(intervalRef.current)
+      // set an Interval to cull here
+      intervalRef.current = window.setInterval(performBoxCullCheck, CULLCHECKINTERVAL)
+      return () => {
+        if(intervalRef)
+          window.clearInterval(intervalRef.current)
+      }
     }
-  }, []);
+  }, [playerMeshRef]);
     
   useFrame(() => {
     // * Checks if new chunks need to be rerendered
-    if(characterPositionRef.current) {
-      const { x, z } = characterPositionRef.current.current.translation()
+    if(playerMeshRef) {
+      const {x, z} = playerMeshRef.current.getWorldPosition(targetPos.current);
       const clampedPos = {x: Math.ceil(x), z: Math.ceil(z)}
       // * Trigger a rerender once [RERENDERRANGE] has been reached
       if(Math.abs(clampedPos.x - prevPosition.current.x) >= RERENDERRANGE || Math.abs(clampedPos.z - prevPosition.current.z) >= RERENDERRANGE) {

@@ -13,6 +13,7 @@ import joystickVs from './components/joystick/Joystick.vs'
 import joystickFs from './components/joystick/Joystick.fs'
 import joystickTopVs from './components/joystick/JoystickTop.vs'
 import joystickTopFs from './components/joystick/JoystickTop.fs'
+import Camera from "./components/Camera/Camera";
 
 const EcctrlJoystickControls = () => {
   const [isTouchScreen, setIsTouchScreen] = useState(false)
@@ -70,13 +71,14 @@ function App() {
         onCreated={
          ({ gl, scene, camera, invalidate }) => setContext({ gl, scene, camera, invalidate })
         }
-        camera={{
-          far:2000 // ! Must be greater than the radius of the skybox (1000), otherwise white fragments due to frustrum cull / depth buffer fail(?)
-        }}
+        // camera={{
+        //   far:2000 // ! Must be greater than the radius of the skybox (1000), otherwise white fragments due to frustrum cull / depth buffer fail(?)
+        // }}
       >
         {/* <Perf position='top-left'/> */}
         <color attach={'background'} args={[0.23,0.7,0.95]}/>
-        <Intro/>
+        {/* <Intro/> */}
+        <Camera/>
         <Experience/>
       </Canvas>
       {context && (

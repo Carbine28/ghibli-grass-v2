@@ -34,6 +34,10 @@ export function Lights() {
   // Update the shadow camera of directional light periodically, better than settings massive values for shadowcamera.
   useEffect(() => {
     updateTarget.current = window.setInterval(modifyTargetPosition, 1000 );
+    // ? Player walks too far things my disappear. Might need to implement this
+    // if(dayDirectionalLight.current) {
+    //   dayDirectionalLight.current.shadow.camera.far
+    // }
     return () => {
       window.clearInterval(updateTarget.current);
     }
@@ -47,7 +51,7 @@ export function Lights() {
     }
   })
   
-  useHelper(dayDirectionalLight, THREE.DirectionalLightHelper, 1.0);
+  // useHelper(dayDirectionalLight, THREE.DirectionalLightHelper, 1.0);
   return <group>
     <group visible={true} name="dayLights">
       <ambientLight intensity={1.2}/>

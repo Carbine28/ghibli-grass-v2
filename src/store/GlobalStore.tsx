@@ -1,5 +1,7 @@
 import { create } from "zustand";
 import { GLOBAL_ASSETS } from "../data/ASSETS";
+import { MutableRefObject } from "react";
+import { Group } from "three";
 
 interface AudioCache {
   [key: string]: AudioBuffer;
@@ -8,14 +10,23 @@ interface AudioCache {
 type GlobalState = {
   experienceStarted: boolean;
   toggleExperienceStarted: () => void;
+  playerMeshRef: MutableRefObject<Group>;
+  setPlayerMeshRef: (ref: MutableRefObject<Group>) => void;
 }
 
 export const useGlobalStore = create<GlobalState>()((set) => {
+
+
+
   const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
   const audioCache: AudioCache = {};
   return {
     experienceStarted: false,
     toggleExperienceStarted: () => set((state) => ({experienceStarted: !state.experienceStarted})),
+
+    playerMeshRef: null,
+    setPlayerMeshRef: (ref) => set(() => ({playerMeshRef: ref})),
+
     playSoundEffect: async (soundId: string | undefined) => {
       try {
         if(!soundId) return;

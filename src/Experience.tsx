@@ -1,10 +1,11 @@
 import { Physics } from "@react-three/rapier";
-import { Lights } from "./components/Lights";
+import { Lights } from "./components/sky/Lights";
 import PhysicsWorldManager from "./components/PhysicsWorldManager";
 import { SoundManager } from "./components/SoundManager";
 import { useGlobalStore } from "./store/GlobalStore";
 import PerlinClouds from "./components/PerlinClouds/PerlinClouds";
 import DayNightSkybox from "./components/sky/DayNightSkybox";
+import TimeCycleManager from "./components/TimeCycleManager";
 
 export default function Experience() {
   const { experienceStarted } = useGlobalStore();
@@ -14,6 +15,7 @@ export default function Experience() {
       {/* <PerlinClouds/> */}
       <Lights/> 
       <SoundManager/>
+      <TimeCycleManager/>
       <Physics paused={!experienceStarted}>
         <PhysicsWorldManager/>
       </Physics>
