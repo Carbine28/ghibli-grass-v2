@@ -52,9 +52,9 @@ export function Ground(props: GroundProps) {
   }, [])
   
   return (
-  <group>
-    <RigidBody  type='fixed' colliders="trimesh">
-      <mesh geometry={groundGeometry}>
+  <group {...props}>
+    <RigidBody type='fixed' colliders="trimesh">
+      <mesh receiveShadow geometry={groundGeometry}>
         {/* <groundShaderMaterial key={GroundShaderMaterial.key} wireframe={isWireframe}/> */}
         <meshStandardMaterial color={'#669933'}/>
       </mesh>

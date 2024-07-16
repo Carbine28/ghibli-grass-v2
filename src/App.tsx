@@ -66,6 +66,7 @@ function App() {
         </div>
       </Suspense>
       <Canvas 
+        shadows
         onCreated={
          ({ gl, scene, camera, invalidate }) => setContext({ gl, scene, camera, invalidate })
         }

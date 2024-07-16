@@ -45,13 +45,13 @@ function ECharacterController(props, ref) {
 
   
   return (
-  <group ref={group} position={[0,0,0]}>
+  <group ref={group} {...props} position={[0,0,0]}>
     {/* <PerspectiveCamera makeDefault/> */}
     <KeyboardControls map={keyboardMap}>
       <Ecctrl ref={rb}
         camInitDis={-2.5}
         capsuleHalfHeight={0.2}
-        camCollision={false}
+        camCollision={true}
         autoBalance={false}
         
       >

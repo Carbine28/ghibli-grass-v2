@@ -85,7 +85,7 @@ export function GroundChunkManager(props: ChunkManagerProp) {
   return(<group visible={experienceStarted}>
     {chunkIndices.map(({ xIndex, zIndex }, i) => (
       <group key={`x${xIndex}-z${zIndex}`} ref={el => groupCullRefs.current[i] = el}>
-        <Ground
+        <Ground 
           chunkPos={{x: xIndex * CHUNK_SIZE, y: 0, z: zIndex * CHUNK_SIZE}}
           widthHeight={CHUNK_SIZE}
           widthHeightSegments={64}

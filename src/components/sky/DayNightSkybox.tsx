@@ -60,7 +60,7 @@ export default function DayNightSkybox() {
   }
   
   const editFragmentShader = (shader: THREE.WebGLProgramParametersWithUniforms) =>{
-    const dayTexture = { value: nightCubeTexture };
+    const dayTexture = { value: dayCubeTexture };
     shader.uniforms.dayTexture = dayTexture;
     shader.fragmentShader = 
     `

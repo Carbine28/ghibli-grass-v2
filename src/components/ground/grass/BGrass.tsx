@@ -25,6 +25,7 @@ export function BGrass(props: BufferGrassProps){
   }, [groundGeoRef])
 
   const grassGeometry = useGrassLOD(chunkPos);
+  const meshRef = useRef<THREE.Mesh>(null!);
   const materialRef = useRef<THREE.MeshStandardMaterial>(null!);
   const shaderRef = useRef<THREE.WebGLProgramParametersWithUniforms>(null!);
   const canRenderRef = useRef(false);
@@ -48,6 +49,8 @@ export function BGrass(props: BufferGrassProps){
     editVertexShader(shader);
     editFragmentShader(shader);
     shaderRef.current = shader;
+    // ? Adding shadows to instances https://discourse.threejs.org/t/meshdepthmaterial-instancedbuffergeometry/4736/2
+    // meshRef.current.customDepthMaterial = new THREE.MeshDepthMaterial(); // 
   }
 
 
@@ -64,14 +67,13 @@ export function BGrass(props: BufferGrassProps){
     shader.vertexShader = shader.vertexShader.replace('#include <clipping_planes_vertex>',
       `#include <clipping_planes_vertex>
         mvPosition = modelMatrix * vec4(position + offset, 1.0);
-
+        frc = mvPosition.y / 0.8;
+        
         // Wind
         float dispPower = 1.0 - cos((1.0 - uv.y) * 3.1416 / 2.0);
         dispPower *= 0.5;
         float displacement = sin( mvPosition.z + uTime * 5.0 ) * ( 0.1 * dispPower );
         mvPosition.z += displacement;
-
-        
       `
     )
 
@@ -80,7 +82,6 @@ export function BGrass(props: BufferGrassProps){
         vec4 modelViewPosition = modelMatrix * viewMatrix * mvPosition;
         gl_Position = projectionMatrix * modelViewPosition;
         vuv = uv;
-        frc = mvPosition.y / 0.8;
       `
     )
   }
@@ -98,22 +99,30 @@ export function BGrass(props: BufferGrassProps){
         vec4 tipColor = vec4(143.0/255.0, 172.0/255.0, 103.0/255.0, 1.0);
         vec4 baseColor = vec4(61.0/255.0, 114.0/255.0, 73.0/255.0, 1.0);
         vec4 col = mix(baseColor, tipColor, frc);
-        vec4 diffuseColor = vec4( col.xyz, opacity );
+        vec4 diffuseColor = vec4( diffuse, opacity );
+        diffuseColor *= col * 1.2;
+      `
+    )
+
+    shader.fragmentShader = shader.fragmentShader.replace('#include <opaque_fragment>',
+      `#include <opaque_fragment>
+        gl_FragColor = diffuseColor;
       `
     )
   }
 
 
-
-  return(<mesh position={customPositions} frustumCulled={false} visible={canRenderRef.current}>
+  return(<mesh ref={meshRef} position={customPositions} frustumCulled={false} visible={canRenderRef.current}>
       <instancedBufferGeometry index={grassGeometry.current.index} 
         attributes-position={grassGeometry.current.attributes.position}
         attributes-uv={grassGeometry.current.attributes.uv}
       >
         <instancedBufferAttribute attach="attributes-offset" args={[offsetArr, 3]} />
       </instancedBufferGeometry>
-      {/* <bGrassMaterial ref={materialRef} key={BGrassMaterial.key}/> */}
-      <meshStandardMaterial ref={materialRef} onBeforeCompile={modifyMaterial} color={'green'}/>
+      {/* <bGrassMaterial ref={materialRef} key={BGrassMaterial.key} receiveShadow/> */}
+      <meshStandardMaterial key={groundGeoRef.current.uuid} ref={materialRef} onBeforeCompile={modifyMaterial}
+        color={'#728e54'}
+       />
     </mesh> 
   );
 }
