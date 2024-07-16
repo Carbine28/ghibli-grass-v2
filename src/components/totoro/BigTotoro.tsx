@@ -5,7 +5,7 @@ import totoro from '/assets/totoro/bigTotoro.glb?url';
 import baseTexture from '/assets/totoro/totoroBase.png';
 
 export function BigTotoro(props: JSX.IntrinsicElements['group']) {
-  const { nodes } = useGLTF(totoro)
+  const { nodes, materials } = useGLTF(totoro)
   const baseTex = useTexture(baseTexture);
   baseTex.flipY = false; // * Don't forget to flip textures
   return (
@@ -18,9 +18,10 @@ export function BigTotoro(props: JSX.IntrinsicElements['group']) {
         rotation={[-Math.PI, -Math.PI/2, -Math.PI]}
         scale={0.055}
       >
-        <totoroShaderMaterial key={TotoroShaderMaterial.key}
+        <meshStandardMaterial map={baseTex}/>
+        {/* <totoroShaderMaterial key={TotoroShaderMaterial.key}
           baseTex={baseTex}
-        />
+        /> */}
       </mesh>
     </group>
   )

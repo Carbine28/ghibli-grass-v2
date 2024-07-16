@@ -6,6 +6,14 @@ import dpy from '/assets/cubeMap/py.png?url';
 import dny from '/assets/cubeMap/ny.png?url'; 
 import dpz from '/assets/cubeMap/pz.png?url';
 import dnz from '/assets/cubeMap/nz.png?url';
+
+import npx from '/assets/cubeMap/night/px.png?url';
+import nnx from '/assets/cubeMap/night/nx.png?url';
+import npy from '/assets/cubeMap/night/py.png?url';
+import nny from '/assets/cubeMap/night/ny.png?url';
+import npz from '/assets/cubeMap/night/pz.png?url';
+import nnz from '/assets/cubeMap/night/nz.png?url';
+
 import { useEffect, useRef } from 'react';
 import { useThree } from '@react-three/fiber';
 import { useGlobalStore } from '../../store/GlobalStore';
@@ -20,6 +28,17 @@ export default function DayNightSkybox() {
       dpz,dnz
     ]
   });
+
+  const nightCubeTexture = useEnvironment({
+    files: [
+      npx,nnx,
+      npy,nny,
+      npz,nnz
+    ]
+  });
+
+  nightCubeTexture.minFilter = THREE.LinearFilter;
+  nightCubeTexture.magFilter = THREE.LinearFilter;
 
   const modifyMaterial = (shader: THREE.WebGLProgramParametersWithUniforms) => {
     editVertexShader(shader);
@@ -41,7 +60,7 @@ export default function DayNightSkybox() {
   }
   
   const editFragmentShader = (shader: THREE.WebGLProgramParametersWithUniforms) =>{
-    const dayTexture = { value: dayCubeTexture };
+    const dayTexture = { value: nightCubeTexture };
     shader.uniforms.dayTexture = dayTexture;
     shader.fragmentShader = 
     `
