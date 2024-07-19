@@ -35,42 +35,42 @@ export default function DayNightSkybox() {
   const shaderRef = useRef<THREE.WebGLProgramParametersWithUniforms>(null!);
   const { contextSafe } = useGSAP();
 
-  useControls('test', {
-    Button: {
-      value: false,
-      onChange: (bool) =>{
-        if(bool) {
-          const event = new Event(EVENTS.nightTime);
-          window.dispatchEvent(event);
-        } else {
-          const event = new Event(EVENTS.dayTime);
-          window.dispatchEvent(event);
-        }
-      }
-    },
-    dayRotationY: {
-      value: 0,
-      min: -360,
-      max: 360,
-      step: 1,
-      onChange: (deg) => {
-        if(shaderRef.current){
-          shaderRef.current.uniforms.rotationMatrix.value = getYRotationMatrix(deg);
-        }
-      }
-    },
-    blendFactor: {
-      value: 0,
-      min: 0,
-      max: 1,
-      step: 0.01,
-      onChange: (bf) => {
-        if(shaderRef.current){
-          shaderRef.current.uniforms.blendFactor.value = bf;
-        }
-      }
-    }
-  })
+  // useControls('test', {
+  //   Button: {
+  //     value: false,
+  //     onChange: (bool) =>{
+  //       if(bool) {
+  //         const event = new Event(EVENTS.nightTime);
+  //         window.dispatchEvent(event);
+  //       } else {
+  //         const event = new Event(EVENTS.dayTime);
+  //         window.dispatchEvent(event);
+  //       }
+  //     }
+  //   },
+  //   dayRotationY: {
+  //     value: 0,
+  //     min: -360,
+  //     max: 360,
+  //     step: 1,
+  //     onChange: (deg) => {
+  //       if(shaderRef.current){
+  //         shaderRef.current.uniforms.rotationMatrix.value = getYRotationMatrix(deg);
+  //       }
+  //     }
+  //   },
+  //   blendFactor: {
+  //     value: 0,
+  //     min: 0,
+  //     max: 1,
+  //     step: 0.01,
+  //     onChange: (bf) => {
+  //       if(shaderRef.current){
+  //         shaderRef.current.uniforms.blendFactor.value = bf;
+  //       }
+  //     }
+  //   }
+  // })
 
   useEffect(() => {
     const changeSkyboxToDay = contextSafe(() => {

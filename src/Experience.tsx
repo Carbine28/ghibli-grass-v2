@@ -12,7 +12,7 @@ export default function Experience() {
   return (
     <>
       <DayNightSkybox/>
-      {/* <PerlinClouds/> */}
+      <PerlinClouds/>
       <Lights/> 
       <SoundManager/>
       <TimeCycleManager/>

@@ -5,9 +5,13 @@ import noiseMap from '/assets/clouds/cloudPerlinNoise.jpg';
 import edgeMap from '/assets/clouds/cloud_edge.jpg';
 
 import { ShaderMaterial } from 'three';
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
+import { EVENTS } from '../../data/EVENTS';
+
+import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
 
 export default function PerlinClouds() {
   const noiseTexture = useTexture(noiseMap);
@@ -15,6 +19,23 @@ export default function PerlinClouds() {
   noiseTexture.wrapS = THREE.RepeatWrapping;
   noiseTexture.wrapT = THREE.RepeatWrapping;
   const materialRef = useRef<ShaderMaterial>();
+  const { contextSafe} = useGSAP();
+  useEffect(() => {
+    const changeCloudsToDay = contextSafe(() => {
+      gsap.to(materialRef.current.uniforms.lightFactor, {value: 1.0, duration: 3.}) 
+    })
+
+    const changeCloudsToNight = contextSafe(() => {
+      gsap.to(materialRef.current.uniforms.lightFactor, { value: 0.2, duration: 3.});
+    })
+
+    window.addEventListener(EVENTS.dayTime, changeCloudsToDay);
+    window.addEventListener(EVENTS.nightTime, changeCloudsToNight);
+    return () => {
+      window.removeEventListener(EVENTS.nightTime, changeCloudsToDay);
+      window.removeEventListener(EVENTS.nightTime, changeCloudsToNight);
+    }
+  }, [])
 
   // useFrame to update map;
   useFrame((state) => {

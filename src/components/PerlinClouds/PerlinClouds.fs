@@ -1,6 +1,7 @@
 uniform sampler2D noiseMap;
 uniform sampler2D edgeMap;
 uniform float uTime;
+uniform float lightFactor;
 varying vec2 vUv;
 
 void main() {
@@ -17,6 +18,7 @@ void main() {
   
   vec4 combinedColor = color * edgeColor * 2.5;
   combinedColor.rgb += vec3(0.4);
+  combinedColor.rgb *= lightFactor;
   gl_FragColor = combinedColor;
   #include <tonemapping_fragment>
   #include <colorspace_fragment>

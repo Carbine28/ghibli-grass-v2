@@ -10,6 +10,7 @@ export const PerlinCloudsShaderMaterial = shaderMaterial(
     uTime: 0.0,
     noiseMap: new THREE.Texture(),
     edgeMap: new THREE.Texture(),
+    lightFactor: 1.0
   },
   cloudVs,
   cloudFs
