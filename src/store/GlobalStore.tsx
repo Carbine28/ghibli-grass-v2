@@ -12,6 +12,8 @@ type GlobalState = {
   toggleExperienceStarted: () => void;
   playerMeshRef: MutableRefObject<Group> | null;
   setPlayerMeshRef: (ref: MutableRefObject<Group>) => void;
+  time: string;
+  setTime: (time: string) => void;
 }
 
 export const useGlobalStore = create<GlobalState>()((set) => {
@@ -23,6 +25,9 @@ export const useGlobalStore = create<GlobalState>()((set) => {
 
     playerMeshRef: null,
     setPlayerMeshRef: (ref) => set(() => ({playerMeshRef: ref})),
+
+    time: "day",
+    setTime: (time: string) => set(() => ({time: time})),
 
     playSoundEffect: async (soundId: string | undefined) => {
       try {
