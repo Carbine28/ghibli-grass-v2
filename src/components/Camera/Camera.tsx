@@ -15,7 +15,7 @@ export default function Camera() {
     const changeToPerspective = () => {
       if (get().camera.name === "2d") {
         set({ camera: perspectiveCam.current });
-        console.log('change to pers')
+        // console.log('change to pers')
       }
     }
     const changeToOrtho = () => {

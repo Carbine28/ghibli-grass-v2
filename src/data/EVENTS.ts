@@ -5,4 +5,6 @@ export const EVENTS = {
   outlineTransitionIn: 'outlineIn',
   outlineTransitionOut: 'outlineOut',
   transitioning: 'transitioning',
+  dayTime: 'dayTime',
+  nightTime: 'nightTime'
 } as const;

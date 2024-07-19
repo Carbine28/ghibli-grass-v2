@@ -7,6 +7,7 @@ import GrassFrag from './BGrass.fs';
 export const BGrassMaterial = shaderMaterial(
   {
     uTime: 0.0,
+    diffuseMultiplier: 1.0,
   },
   GrassVert,
   GrassFrag

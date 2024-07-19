@@ -6,6 +6,9 @@ import { BGrassMaterial } from './BGrassMaterial';
 import { useFrame, Vector3 } from '@react-three/fiber';
 import { useControls } from 'leva';
 import { useGrassLOD } from './hooks/useGrassLOD';
+import { EVENTS } from '../../../data/EVENTS';
+import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
 
 type BufferProps = {
   groundGeoRef: MutableRefObject<THREE.PlaneGeometry>
@@ -29,6 +32,29 @@ export function BGrass(props: BufferGrassProps){
   const materialRef = useRef<THREE.MeshStandardMaterial>(null!);
   const shaderRef = useRef<THREE.WebGLProgramParametersWithUniforms>(null!);
   const canRenderRef = useRef(false);
+  const { contextSafe } = useGSAP()
+
+  useEffect(() => {
+    const changeGrassToDay = contextSafe(() => {
+      if(materialRef.current){
+        gsap.to(materialRef.current.uniforms.diffuseMultiplier, { value: 1.0, duration: 4.0 });
+      }
+    })
+
+    const changeGrassToNight = contextSafe(() => {
+      // ? Can change brightness too
+      if(materialRef.current){
+        gsap.to(materialRef.current.uniforms.diffuseMultiplier, { value: 0.35, duration: 5.0 });
+      }
+    })
+
+    window.addEventListener(EVENTS.dayTime, changeGrassToDay);
+    window.addEventListener(EVENTS.nightTime, changeGrassToNight);
+    return () => {
+      window.removeEventListener(EVENTS.dayTime, changeGrassToDay);
+      window.removeEventListener(EVENTS.nightTime, changeGrassToNight);
+    }
+  }, [])
 
 
   useEffect(() => {
@@ -38,8 +64,11 @@ export function BGrass(props: BufferGrassProps){
   }, [groundGeoRef])
 
   useFrame((state) => {
-    if(shaderRef.current) {
-      shaderRef.current.uniforms.uTime.value = state.clock.elapsedTime;
+    // if(shaderRef.current) {
+    //   shaderRef.current.uniforms.uTime.value = state.clock.elapsedTime;
+    // }
+    if(materialRef.current){
+      materialRef.current.uniforms.uTime.value = state.clock.elapsedTime;
     }
   })
 
@@ -100,7 +129,7 @@ export function BGrass(props: BufferGrassProps){
         vec4 baseColor = vec4(61.0/255.0, 114.0/255.0, 73.0/255.0, 1.0);
         vec4 col = mix(baseColor, tipColor, frc);
         vec4 diffuseColor = vec4( diffuse, opacity );
-        diffuseColor *= col * 1.2;
+        diffuseColor *= col * 1.5;
       `
     )
 
@@ -119,10 +148,10 @@ export function BGrass(props: BufferGrassProps){
       >
         <instancedBufferAttribute attach="attributes-offset" args={[offsetArr, 3]} />
       </instancedBufferGeometry>
-      {/* <bGrassMaterial ref={materialRef} key={BGrassMaterial.key} receiveShadow/> */}
-      <meshStandardMaterial key={groundGeoRef.current.uuid} ref={materialRef} onBeforeCompile={modifyMaterial}
-        color={'#728e54'}
-       />
+      <bGrassMaterial ref={materialRef} key={BGrassMaterial.key}/>
+      {/* <meshStandardMaterial key={groundGeoRef.current.uuid} ref={materialRef} onBeforeCompile={modifyMaterial}
+        color={'#9bc970'}
+       /> */}
     </mesh> 
   );
 }
