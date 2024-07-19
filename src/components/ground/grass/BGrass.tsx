@@ -9,6 +9,7 @@ import { useGrassLOD } from './hooks/useGrassLOD';
 import { EVENTS } from '../../../data/EVENTS';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
+import { useGlobalStore } from '../../../store/GlobalStore';
 
 type BufferProps = {
   groundGeoRef: MutableRefObject<THREE.PlaneGeometry>
@@ -33,6 +34,7 @@ export function BGrass(props: BufferGrassProps){
   const shaderRef = useRef<THREE.WebGLProgramParametersWithUniforms>(null!);
   const canRenderRef = useRef(false);
   const { contextSafe } = useGSAP()
+  const { time } = useGlobalStore();
 
   useEffect(() => {
     const changeGrassToDay = contextSafe(() => {
@@ -47,6 +49,12 @@ export function BGrass(props: BufferGrassProps){
         gsap.to(materialRef.current.uniforms.diffuseMultiplier, { value: 0.35, duration: 5.0 });
       }
     })
+
+    if(time === "day"){
+      materialRef.current.uniforms.diffuseMultiplier.value = 1.0;
+    } else {
+      materialRef.current.uniforms.diffuseMultiplier.value = 0.35;
+    }
 
     window.addEventListener(EVENTS.dayTime, changeGrassToDay);
     window.addEventListener(EVENTS.nightTime, changeGrassToNight);
