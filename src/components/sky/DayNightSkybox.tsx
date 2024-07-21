@@ -22,6 +22,7 @@ import { useControls } from 'leva';
 import { getYRotationMatrix } from '../../utils/transformation/RotationUtils';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
+import { GLOBAL_CONFIG } from '../../data/GLOBAL_CONFIG';
 
 export default function DayNightSkybox() {
   const { scene } = useThree();
@@ -75,13 +76,13 @@ export default function DayNightSkybox() {
   useEffect(() => {
     const changeSkyboxToDay = contextSafe(() => {
       if(shaderRef.current){
-        gsap.to(shaderRef.current.uniforms.blendFactor, {value: .0, duration: 2.0, ease:'power1.in' })
+        gsap.to(shaderRef.current.uniforms.blendFactor, {value: .0, duration: GLOBAL_CONFIG.DAYNIGHTCONFIG.DAY_TO_NIGHT_TRANSITION, ease:'power1.in' })
       }
     })
   
     const changeSkyboxToNight = contextSafe(() => {
       if(shaderRef.current){
-        gsap.to(shaderRef.current.uniforms.blendFactor, {value: 1.0, duration: 2.0, ease:'power1.in' })
+        gsap.to(shaderRef.current.uniforms.blendFactor, {value: 1.0, duration: GLOBAL_CONFIG.DAYNIGHTCONFIG.NIGHT_TO_DAY_TRANSITION, ease:'power1.in' })
       }
     })
     window.addEventListener(EVENTS.dayTime, changeSkyboxToDay);
@@ -157,6 +158,3 @@ export default function DayNightSkybox() {
   )
 }
 
-const testFunction = () => {
-  console.log('hi');
-}

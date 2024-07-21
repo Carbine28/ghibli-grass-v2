@@ -12,6 +12,7 @@ import { EVENTS } from '../../data/EVENTS';
 
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
+import { GLOBAL_CONFIG } from '../../data/GLOBAL_CONFIG';
 
 export default function PerlinClouds() {
   const noiseTexture = useTexture(noiseMap);
@@ -22,11 +23,11 @@ export default function PerlinClouds() {
   const { contextSafe} = useGSAP();
   useEffect(() => {
     const changeCloudsToDay = contextSafe(() => {
-      gsap.to(materialRef.current.uniforms.lightFactor, {value: 1.0, duration: 3.}) 
+      gsap.to(materialRef.current.uniforms.lightFactor, {value: 1.0, duration: GLOBAL_CONFIG.DAYNIGHTCONFIG.NIGHT_TO_DAY_TRANSITION, ease:'power1.in'}) 
     })
 
     const changeCloudsToNight = contextSafe(() => {
-      gsap.to(materialRef.current.uniforms.lightFactor, { value: 0.2, duration: 3.});
+      gsap.to(materialRef.current.uniforms.lightFactor, { value: 0.2, duration: GLOBAL_CONFIG.DAYNIGHTCONFIG.DAY_TO_NIGHT_TRANSITION, ease:'power1.in' });
     })
 
     window.addEventListener(EVENTS.dayTime, changeCloudsToDay);

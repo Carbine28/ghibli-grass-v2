@@ -10,6 +10,7 @@ import { EVENTS } from '../../../data/EVENTS';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { useGlobalStore } from '../../../store/GlobalStore';
+import { GLOBAL_CONFIG } from '../../../data/GLOBAL_CONFIG';
 
 type BufferProps = {
   groundGeoRef: MutableRefObject<THREE.PlaneGeometry>
@@ -39,14 +40,14 @@ export function BGrass(props: BufferGrassProps){
   useEffect(() => {
     const changeGrassToDay = contextSafe(() => {
       if(materialRef.current){
-        gsap.to(materialRef.current.uniforms.diffuseMultiplier, { value: 1.0, duration: 4.0 });
+        gsap.to(materialRef.current.uniforms.diffuseMultiplier, { value: 1.0, duration: GLOBAL_CONFIG.DAYNIGHTCONFIG.NIGHT_TO_DAY_TRANSITION});
       }
     })
 
     const changeGrassToNight = contextSafe(() => {
       // ? Can change brightness too
       if(materialRef.current){
-        gsap.to(materialRef.current.uniforms.diffuseMultiplier, { value: 0.35, duration: 5.0 });
+        gsap.to(materialRef.current.uniforms.diffuseMultiplier, { value: 0.35, duration: GLOBAL_CONFIG.DAYNIGHTCONFIG.DAY_TO_NIGHT_TRANSITION });
       }
     })
 

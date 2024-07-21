@@ -16,7 +16,7 @@ export default function CharacterAudioController(props: AudioControllerProps) {
   useEffect(() => {
     if(positionalAudioRef) {
       // console.log(positionalAudioRef.current.getVolume())
-      positionalAudioRef.current.setVolume(0.4)
+      positionalAudioRef.current.setVolume(1.2)
     }
   }, [positionalAudioRef])
 
@@ -28,6 +28,12 @@ export default function CharacterAudioController(props: AudioControllerProps) {
     if (get().backward) movement.z = -1;
     if (get().leftward) movement.x = 1;
     if (get().rightward) movement.x = -1;
+    if(get().jump){
+      positionalAudioRef.current.setVolume(0.);
+    } else {
+      positionalAudioRef.current.setVolume(1.2);
+    }
+  
     if(movement.x !== 0 || movement.z !== 0 || joystickDis) {
       if(positionalAudioRef && !positionalAudioRef.current.isPlaying){
         positionalAudioRef.current.play();
