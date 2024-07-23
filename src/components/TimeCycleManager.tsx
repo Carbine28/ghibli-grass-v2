@@ -4,8 +4,8 @@ import { useGlobalStore } from "../store/GlobalStore";
 import { EVENTS } from "../data/EVENTS";
 
 
-const DAYDURATION = 60 * 0.2;
-const NIGHTDURATION = 60 * 0.2;
+const DAYDURATION = 60 * 0.5;
+const NIGHTDURATION = 60 * 0.5;
 const TOTAL_DURATION =  DAYDURATION + NIGHTDURATION;
 
 export default function TimeCycleManager() {

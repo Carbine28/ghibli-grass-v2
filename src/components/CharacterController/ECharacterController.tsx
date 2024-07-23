@@ -7,6 +7,7 @@ import { KeyboardControls, PositionalAudio, useKeyboardControls } from "@react-t
 import grassRunSfx from '/assets/audio/runGrassSfx.mp3';
 import CharacterAudioController from "./CharacterAudioController";
 import { EVENTS } from "../../data/EVENTS";
+import { RiggedTotoro } from "../totoro/RiggedTotoro";
 
 const keyboardMap = [
   { name: "forward", keys: ["ArrowUp", "KeyW"] },
@@ -52,7 +53,8 @@ export function ECharacterController(props) {
         {/* <PerspectiveCamera ref={per} fov={75} near={0.1} far={1000} /> */}
         <PositionalAudio ref={posAudioRef} url={grassRunSfx}/>
         <CharacterAudioController positionalAudioRef={posAudioRef}/>
-        <BigTotoro/>
+        {/* <BigTotoro/> */}
+        <RiggedTotoro/>
       </Ecctrl>
     </KeyboardControls>
   </group>
