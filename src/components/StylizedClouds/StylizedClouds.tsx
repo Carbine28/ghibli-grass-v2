@@ -6,6 +6,9 @@ import { useGlobalStore } from "../../store/GlobalStore";
 
 const CLOUD_NUM = 8;
 
+// TODO Calculate positions in UseMemo instead.
+// TODO Alter clouds to have different sizes
+
 export default function StylizedClouds() {
   const group = useRef<THREE.Group>(null!);
   const playerPosition = useRef<THREE.Vector3>(new THREE.Vector3());
@@ -16,9 +19,11 @@ export default function StylizedClouds() {
   const adjustCloudsLookDirection = () => {
     if(player.current){
       player.current.getWorldPosition(playerPosition.current)
-      group.current.children.forEach((child) => {
-        child.lookAt(playerPosition.current);
-      })
+      if(group.current){
+        group.current.children.forEach((child) => {
+          child.lookAt(playerPosition.current);
+        })
+      }
     }
   }
 

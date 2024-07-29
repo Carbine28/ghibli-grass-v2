@@ -1,6 +1,6 @@
 import { Canvas } from "@react-three/fiber"
 import Experience from "./Experience"
-import {Loader} from "@react-three/drei"
+import {Loader, useProgress} from "@react-three/drei"
 import { Perf } from 'r3f-perf';
 import Intro from "./components/Intro/Intro";
 import IntroControls from "./components/Intro/IntroControls";
@@ -14,6 +14,7 @@ import joystickFs from './components/joystick/Joystick.fs'
 import joystickTopVs from './components/joystick/JoystickTop.vs'
 import joystickTopFs from './components/joystick/JoystickTop.fs'
 import Camera from "./components/Camera/Camera";
+import { Leva } from "leva";
 
 const EcctrlJoystickControls = () => {
   const [isTouchScreen, setIsTouchScreen] = useState(false)
@@ -55,15 +56,24 @@ function App() {
     scene: THREE.Scene;
     camera: THREE.Camera;
     invalidate: () => void;
-} | null>(null);
+  } | null>(null);
 
+  const [ isLoaded, setIsLoaded ] = useState(false);
+  const { loaded, total} = useProgress();
+
+  useEffect(() => {
+    if(loaded === total){
+      setTimeout(() => setIsLoaded(true), 800);
+    }
+  }, [loaded, total])
   return (<>
       <EcctrlJoystickControls/>
       <Loader/>
-      <Suspense fallback={null}>
+      <Leva hidden/>
+      <Suspense>
         <div style={{zIndex: '999999'}}>
           <Credits/>
-          <IntroControls/>
+          {isLoaded && <IntroControls/>}
         </div>
       </Suspense>
       <Canvas 

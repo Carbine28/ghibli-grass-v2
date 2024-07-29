@@ -22,7 +22,7 @@ export default function IntroControls() {
   }, [transitioned])
 
   const handleExperienceStart = () => {
-    console.log('Starting Experience!');
+    // console.log('Starting Experience!');
     const pointerElement = document.querySelector('.pointer') as HTMLElement;
     if(pointerElement){
       pointerElement.classList.add('hidden');
@@ -37,10 +37,10 @@ export default function IntroControls() {
     }, 300)
 
     setTimeout(() => {
-      toggleExperienceStarted();
       setTransitioned(true);
       const toPerspective = new Event(EVENTS.perspective);
       window.dispatchEvent(toPerspective);
+      toggleExperienceStarted();
     }, 1300)
   }
 
