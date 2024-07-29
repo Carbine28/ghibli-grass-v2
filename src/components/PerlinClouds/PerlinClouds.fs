@@ -8,15 +8,28 @@ void main() {
   vec2 uv = vUv;
   vec2 direction = vec2(1,0);
   vec2 move = direction * uTime * 0.003;
-  vec4 color = texture(noiseMap, uv + move);
-  // Sample the edge map texture
-  vec4 edgeColor = texture(edgeMap, vUv);
+  // vec2 move = direction * uTime * 0.12;
 
-  if(color.r <= 0.5) {
-    color.a = 0.0;
+  vec4 color = texture(noiseMap, uv + move);
+
+  // color.rgb *= normal.rgb;
+  // Sample the edge map texture
+  // vec4 edgeColor = texture(edgeMap, vUv);
+
+  color.a = 0.0;
+  // if(color.r >= 0.7){
+  //   color.a = 0.05;
+  // } 
+  // a
+  if(color.r >= 0.95){
+    color.a = 1.0;
   }
+  // if(color.r <= 0.8) {
+  //   color.a = 0.0;
+  // } else if (olor.r <= 0.7)
   
-  vec4 combinedColor = color * edgeColor * 2.5;
+  vec4 cloudColor = vec4( 118.0/255.0, 168.0/255.0, 168.0/255.0 ,1.0);
+  vec4 combinedColor = color * cloudColor;
   combinedColor.rgb += vec3(0.4);
   combinedColor.rgb *= lightFactor;
   gl_FragColor = combinedColor;

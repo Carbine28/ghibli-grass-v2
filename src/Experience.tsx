@@ -6,13 +6,15 @@ import { useGlobalStore } from "./store/GlobalStore";
 import PerlinClouds from "./components/PerlinClouds/PerlinClouds";
 import DayNightSkybox from "./components/sky/DayNightSkybox";
 import TimeCycleManager from "./components/TimeCycleManager";
+import StylizedClouds from "./components/StylizedClouds/StylizedClouds";
 
 export default function Experience() {
   const { experienceStarted } = useGlobalStore();
   return (
     <>
       <DayNightSkybox/>
-      <PerlinClouds/>
+      {/* <PerlinClouds/> */}
+      <StylizedClouds/>
       <Lights/> 
       <SoundManager/>
       <TimeCycleManager/>

@@ -14,11 +14,13 @@ import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { GLOBAL_CONFIG } from '../../data/GLOBAL_CONFIG';
 
+import diffuse from '/assets/clouds/diffuse.jpg?url';
+
 export default function PerlinClouds() {
-  const noiseTexture = useTexture(noiseMap);
-  const edgeTexture = useTexture(edgeMap);
-  noiseTexture.wrapS = THREE.RepeatWrapping;
-  noiseTexture.wrapT = THREE.RepeatWrapping;
+
+  const diffuseTexture = useTexture(diffuse);
+  diffuseTexture.wrapS = THREE.RepeatWrapping;
+  diffuseTexture.wrapT = THREE.RepeatWrapping;
   const materialRef = useRef<ShaderMaterial>();
   const { contextSafe} = useGSAP();
   useEffect(() => {
@@ -45,11 +47,12 @@ export default function PerlinClouds() {
     }
   })
 
-  return (<group position={[0,300,0]} rotation={[Math.PI / 2, 0, 0]}>
+  return (<group position={[0,500,0]} rotation={[Math.PI / 2, 0, 0]}>
       <mesh >
         <planeGeometry args={[1500,1500]} />
         <perlinCloudsShaderMaterial key={PerlinCloudsShaderMaterial.key} ref={materialRef} 
-        noiseMap={noiseTexture} edgeMap={edgeTexture} 
+        // noiseMap={noiseTexture} edgeMap={edgeTexture} 
+        noiseMap={diffuseTexture} 
         transparent/>
       </mesh>
   </group>

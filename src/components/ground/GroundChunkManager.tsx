@@ -36,8 +36,6 @@ export function GroundChunkManager() {
     }
     return indices;
   }
-  
-
 
   const performBoxCullCheck = () => {
     if(!groupCullRefs.current) return;

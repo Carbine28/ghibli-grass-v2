@@ -6,18 +6,17 @@ import baseTexture from '/assets/totoro/totoroBase.png';
 import totoro from '/assets/totoro/bigTotoro2.glb?url';
 import { useFrame } from '@react-three/fiber';
 import { useJoystickControls } from 'ecctrl';
+
 export function RiggedTotoro(props) {
   const group = useRef<Group>(null!);
   const { nodes, materials, animations } = useGLTF(totoro)
   const baseTex = useTexture(baseTexture);
   baseTex.flipY = false;
   const { actions } = useAnimations(animations, group)
-
   const { setPlayerMeshRef } = useGlobalStore();
 
   useEffect(() => {
     setPlayerMeshRef(group);
-    console.log(actions);
   }, [])
 
   const [,get] = useKeyboardControls();
@@ -40,7 +39,7 @@ export function RiggedTotoro(props) {
 
   return (
     <group ref={group} {...props} dispose={null}>
-      <group name="Scene" position={[0,-0.5,0]}>
+      <group name="Scene" position={[0,-0.8,0]} scale={1.2}>
         <group name="Armature">
           <skinnedMesh
             name="bigTotoro001"
