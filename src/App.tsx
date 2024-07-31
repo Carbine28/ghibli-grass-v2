@@ -69,7 +69,7 @@ function App() {
   return (<>
       <EcctrlJoystickControls/>
       <Loader/>
-      <Leva hidden/>
+      <Leva />
       <Suspense>
         <div style={{zIndex: '999999'}}>
           <Credits/>

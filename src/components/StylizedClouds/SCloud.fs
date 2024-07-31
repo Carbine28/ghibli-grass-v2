@@ -74,7 +74,7 @@ void main() {
   vec4 edgeGradient = edgeGradNoise + vec4(gradMultiplier);
   edgeGradient *= color.w;
 
-  float alpha = clamp(edgeGradient.a, 0.0, 1.0);
+  vec4 alpha = clamp(edgeGradient, vec4(0.0), vec4(1.0));
   gl_FragColor = vec4(color.xyz, alpha);
 
   #include <tonemapping_fragment>

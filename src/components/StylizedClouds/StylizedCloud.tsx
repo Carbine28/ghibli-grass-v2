@@ -13,7 +13,7 @@ import noise from '/assets/stylizedClouds/noise.jpg?url';
 import { useFrame } from '@react-three/fiber';
 import { useControls } from 'leva';
 
-const CLOUD_SIZE = 100;
+const CLOUD_SIZE = 125;
 
 export default function StylizedCloud(props: JSX.IntrinsicElements['group']) {
   const group = useRef<THREE.Group>(null!);

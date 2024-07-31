@@ -4,7 +4,8 @@ import * as THREE from 'three';
 import { useFrame, useThree } from "@react-three/fiber";
 import { useGlobalStore } from "../../store/GlobalStore";
 
-const CLOUD_NUM = 8;
+const MAX_CLOUDS = 50; // Max clouds allowed on scene
+const CLOUT_COUNT = 8; // Clouds generated 
 
 // TODO Calculate positions in UseMemo instead.
 // TODO Alter clouds to have different sizes
@@ -42,7 +43,7 @@ export default function StylizedClouds() {
   
   return (<group ref={group} visible={experienceStarted}>
     {
-      Array(CLOUD_NUM).fill(0).map(() => {
+      Array(CLOUT_COUNT).fill(0).map(() => {
         const randPos = generateRandomPosition3();
         return <StylizedCloud key={`${randPos.x}-${randPos.y}-${randPos.z}`} position={[randPos.x, randPos.y, randPos.z]}/>
       })
