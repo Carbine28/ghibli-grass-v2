@@ -1,0 +1,10 @@
+{
+  "headers": [
+    {
+      "source": "/ghibli-grass-v2/assets/(.*).js",
+      "headers": [
+        { "key": "Content-Type", "value": "application/javascript" }
+      ]
+    }
+  ]
+}
